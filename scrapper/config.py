@@ -12,3 +12,7 @@ SEARCH_KEYWORDS = [
   "deka guadalajara",
   "deka malaga"
 ]
+
+SEARCH_KEYWORDS_DEV = [
+  "deka guadalajara",
+]

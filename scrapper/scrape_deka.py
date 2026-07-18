@@ -1,7 +1,7 @@
 # scrape_deka.py
 import requests
 from datetime import datetime
-from config import DEKA_SEARCH_URL, HEADERS, SEARCH_KEYWORDS
+from config import DEKA_SEARCH_URL, HEADERS, SEARCH_KEYWORDS, SEARCH_KEYWORDS_DEV
 from scrape_deka_page import scrape_deka_event
 from deka_excel_exporter import export_to_excel
 
@@ -53,13 +53,17 @@ def normalize_event(raw):
 
 
 def main():
-  raw_events = search_deka_event(SEARCH_KEYWORDS[4])
-  events = [normalize_event(e) for e in raw_events]
-  for e in events:
-    print(f"- {e['name']} ({e['url']})")
-    deka_results = scrape_deka_event(e)
-    file_path = f"results_excel/DEKA-{e['city']}.xlsx"
-    export_to_excel(deka_results, file_path)
+  search_keywords = SEARCH_KEYWORDS_DEV #SEARCH_KEYWORDS
+  for i in range(0, len(search_keywords)):
+    raw_events = search_deka_event(search_keywords[i])
+    events = [normalize_event(e) for e in raw_events]
+    for e in events:
+      print(f"- {e['name']} ({e['url']})")
+      event_date = datetime.fromisoformat(e['start_date']).date()
+
+      deka_results = scrape_deka_event(e, event_date)
+      file_path = f"results_excel/{deka_results.get_event_name()}.xlsx"
+      export_to_excel(deka_results, file_path)
 
 
 if __name__ == "__main__":

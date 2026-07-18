@@ -1,7 +1,33 @@
 from openpyxl import Workbook
-from results_data import DekaResults
-from typing import cast
+from results_data import DekaResults, AthleteResult, DekaType, DekaGender
 
+
+
+def get_athlete_row(athlete:AthleteResult, deka_type:str, category_name:str) -> list:
+  gender = DekaGender.get_name(athlete.gender)
+  row = [athlete.name, deka_type, gender, category_name, athlete.time]
+  for i in range(0, len(athlete.run_times)):
+    row.append(athlete.run_times[i])
+    row.append(athlete.zone_times[i])
+
+  return row
+
+def get_athlete_title_row() -> list:
+  title = [
+    "Name", "DEKA Type", "Gender", "Category", "Mark", 
+    "Run 1", "Zone 1",
+    "Run 2", "Zone 2",
+    "Run 3", "Zone 3",
+    "Run 4", "Zone 4",
+    "Run 5", "Zone 5",
+    "Run 6", "Zone 6",
+    "Run 7", "Zone 7",
+    "Run 8", "Zone 8",
+    "Run 9", "Zone 9",
+    "Run 10", "Zone 10"
+  ]
+
+  return title
 
 def export_to_excel(deka:DekaResults, filename:str):
   print(f"Exporting {deka} to {filename} (total of {len(deka.types)} types)")
@@ -11,21 +37,16 @@ def export_to_excel(deka:DekaResults, filename:str):
 
   for deka_type in deka.types:
     #print(f"Adding sheet for {deka_type}")
+    deka_type_name = DekaType.get_name(deka_type.type)
 
     ws = wb.create_sheet(title=deka_type.name[:31])
-    ws.append([deka_type.name])
-    ws.append([])
+    ws.append(get_athlete_title_row())
 
     for category in deka_type.categories:
       #print(f"Category {category.name} has {len(category.athletes)} athletes")
 
-      title_row = [category.name]
-      ws.append([])
-      ws.append(title_row)
-      ws.append(["Name", "Time"])
-
       for athlete in category.athletes:
-        row = [athlete.name, athlete.time]
+        row = get_athlete_row(athlete, category.name, deka_type_name)
         ws.append(row)
   
   wb.save(filename)
