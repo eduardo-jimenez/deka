@@ -56,10 +56,11 @@ def export_to_excel(deka:DekaResults, filename:str):
   
   # add a sheet with the event info
   ws = wb.create_sheet(title="Event Info")
-  ws.append(deka.name)
-  ws.append(deka.url)
-  ws.append(deka.city)
-  ws.append(deka.date)
+  ws.append(["Name", deka.name])
+  ws.append(["URL", deka.url])
+  ws.append(["City", deka.city])
+  ws.append(["Start Date", deka.date])
+  ws.append(["End Date", deka.date])
 
   # save to file  
   wb.save(filename)

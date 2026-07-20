@@ -87,7 +87,7 @@ def scrape_deka_event(event, event_date:date) -> DekaResults:
     # we're going to ignore DEKA Mile and DEKA Strong
     if (deka_type.type == DekaType.MILE or deka_type.type == DekaType.STRONG):
       continue
-    
+
     list_name_encoded = urllib.parse.quote(list_name)
     elem_url = (
       f"https://{server}/{eventId}/RRPublish/data/list?"
