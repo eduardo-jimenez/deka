@@ -34,7 +34,7 @@ class DekaType(Enum):
   MILE = 3
   STRONG = 4
 
-  def get_name(type:DekaType) -> str:
+  def get_name(type:DekaType) -> str: # pyright: ignore[reportSelfClsParameterName]
     match type:
       case DekaType.FIT:
         return "DEKA Fit"
@@ -51,7 +51,7 @@ class DekaGender(Enum):
   FEMALE = 2
   MIXED = 3
 
-  def get_name(gender:DekaGender) -> str:
+  def get_name(gender:DekaGender) -> str: # pyright: ignore[reportSelfClsParameterName]
     match gender:
       case DekaGender.MALE:
         return "Male"
@@ -108,10 +108,18 @@ class AthleteResult:
     #print(f"parsing {data_json_list} for athlete data [is_teams = {is_teams}]")
     self.gender = gender
 
+    # try to find the index of the name of the athlete/team and thus get it from the data
     name_index = next((i for i, s in enumerate(data_fields) if "displayname" in s.lower()), -1)
+    if name_index < 0:
+      # sometimes in teams they use a special formula to generate the display name
+      name_index = next((i for i, s in enumerate(data_fields) if "flname" in s.lower()), -1)
+      if name_index < 0:
+        name_index = next((i for i, s in enumerate(data_fields) if "name" in s.lower()), -1)
+
     if name_index >= 0 and name_index < len(data_list):
       self.name = data_list[name_index]
-    
+   
+    # try to find the final time index and thus get it from the data
     final_time_index = next((i for i, s in enumerate(data_fields) if "finaltime" in s.lower()), -1)
     if final_time_index >= 0 and final_time_index < len(data_list):
       self.time = parse_duration(data_list[final_time_index])
