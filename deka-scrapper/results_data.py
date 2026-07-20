@@ -5,7 +5,7 @@ from typing import Optional
 
 
 def parse_duration(durationStr:str) -> timedelta:
-  if durationStr == "":
+  if durationStr == "" or durationStr == "--":
     return timedelta(0)
 
   parts = durationStr.split(':')
@@ -102,12 +102,19 @@ class AthleteResult:
   time = timedelta
   run_times:list[timedelta] = []
   zone_times:list[timedelta] = []
+  penalty:timedelta
 
-  def from_json(self, gender:DekaGender, data_json_list:list):
+  def from_json(self, gender:DekaGender, data_list:list, data_fields:list):
     #print(f"parsing {data_json_list} for athlete data [is_teams = {is_teams}]")
     self.gender = gender
-    self.name = data_json_list[4]
-    self.time = parse_duration(data_json_list[10])
+
+    name_index = next((i for i, s in enumerate(data_fields) if "displayname" in s.lower()), -1)
+    if name_index >= 0 and name_index < len(data_list):
+      self.name = data_list[name_index]
+    
+    final_time_index = next((i for i, s in enumerate(data_fields) if "finaltime" in s.lower()), -1)
+    if final_time_index >= 0 and final_time_index < len(data_list):
+      self.time = parse_duration(data_list[final_time_index])
 
   def __str__(self):
     return f"{self.name} - {self.time}"

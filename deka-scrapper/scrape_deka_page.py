@@ -165,7 +165,6 @@ def scrape_deka_category(event, deka_type:DekaTypeResults, key:str, server:str, 
   category.deka_type = deka_type
 
   print(f"Scraping DEKA category {category.name} ({encoded_category})")
-  gender = DekaGender
   if "co-ed" in encoded_category.lower():
     category.gender = DekaGender.MIXED
   elif "female" in encoded_category.lower():
@@ -189,6 +188,7 @@ def scrape_deka_category(event, deka_type:DekaTypeResults, key:str, server:str, 
   responseJson = response.json()
   responseData = responseJson["data"]
   #print(responseData)
+  response_data_fields = responseJson["DataFields"]
 
   num_athletes = len(responseData)
   print(f"Scraping all {num_athletes} atheletes for {category_name}...")
@@ -199,7 +199,7 @@ def scrape_deka_category(event, deka_type:DekaTypeResults, key:str, server:str, 
       athlete = AthleteResult()
       athlete.category = category
       athlete.gender = category.gender
-      athlete.from_json(category.gender, athleteData)
+      athlete.from_json(category.gender, athleteData, response_data_fields)
       athlete_pid = athleteData[1]
 
       list_name = scrape_deka_athlete_list_name(eventId, details, athlete_pid, category)
@@ -258,8 +258,50 @@ def scrape_athlete_result(athlete: AthleteResult, url_start:str, key:str, contes
       run_times.append(run_time)
       zone_times.append(zone_time)
 
+    # get the penalty time
+    penalty_label_str = f"PenaltyTime"
+    penalty_index = next((i for i, s in enumerate(raw_data_fields) if penalty_label_str in s), -1)
+    penalty_time = timedelta(0)
+    if (penalty_index > 0):
+      penalty_time_str = raw_data[penalty_index]
+      penalty_time = parse_duration(penalty_time_str)
+
+    # assign the run times, zone times and penalty
     athlete.run_times = run_times
     athlete.zone_times = zone_times
+    athlete.penalty = penalty_time
+
+    # and finally try to scrape the DEKA Mark
+    final_time_label_str = f"Format([FinalTime.DECIMAL]"
+    final_time_index = next((i for i, s in enumerate(raw_data_fields) if s.startswith(final_time_label_str)), -1)
+    if (final_time_index >= 0):
+      final_time_str = raw_data[final_time_index]
+      final_time = parse_duration(final_time_str)
+      if (final_time.seconds > 0):
+        athlete.time = final_time
+    else:
+      # for DEKA Mile
+      final_time_label_str = f"Format([Finish.DECIMAL]"
+      final_time_index = next((i for i, s in enumerate(raw_data_fields) if s.startswith(final_time_label_str)), -1)
+      if (final_time_index >= 0):
+        final_time_str = raw_data[final_time_index]
+        final_time = parse_duration(final_time_str)
+        if (final_time.seconds > 0):
+          athlete.time = final_time
+
+    # ensure we have a deka mark
+    deka_mark = athlete.time
+    total_secs = 0.0
+    if deka_mark and isinstance(deka_mark, timedelta):
+      total_secs = deka_mark.total_seconds()
+    if total_secs < 1.0:
+      # calculate the time adding all times up
+      total_time = timedelta(0)
+      for run_time in run_times:
+        total_time += run_time
+      for zone_time in zone_times:
+        total_time += zone_time
+      athlete.time = total_time
 
   except Exception as e:
     print(f"Error acquiring athlete data from url {url}: {e}")
