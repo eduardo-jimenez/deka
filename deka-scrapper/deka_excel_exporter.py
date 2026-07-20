@@ -48,8 +48,19 @@ def export_to_excel(deka:DekaResults, filename:str):
       #print(f"Category {category.name} has {len(category.athletes)} athletes")
 
       for athlete in category.athletes:
-        row = get_athlete_row(athlete, category.name, deka_type_name)
-        ws.append(row)
+        try:
+          row = get_athlete_row(athlete, deka_type_name, category.name)
+          ws.append(row)
+        except Exception as e:
+          print(f"Error extracting and adding row for athlete {athlete.name} in {category.name}")
   
+  # add a sheet with the event info
+  ws = wb.create_sheet(title="Event Info")
+  ws.append(deka.name)
+  ws.append(deka.url)
+  ws.append(deka.city)
+  ws.append(deka.date)
+
+  # save to file  
   wb.save(filename)
 

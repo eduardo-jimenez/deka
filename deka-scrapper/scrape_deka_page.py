@@ -15,6 +15,11 @@ def scrape_deka_event(event, event_date:date) -> DekaResults:
   general_url = f"https://my.raceresult.com/{eventId}/RRPublish/data/config?lang=en&page=results&noVisitor=1&v=1"
   print(f"General URL = {general_url}")
   response = requests.get(general_url, headers=HEADERS, timeout=15)
+  if not response.ok:
+    # not sure if this is not working because when I'm developing this the results are still too 'young' and thus treated like they were live or why, but in Madrid 2026 they are not working with the other url
+    general_url = f"https://my.raceresult.com/{eventId}/results/config?lang=en&page=results&noVisitor=1&v=1"
+    print(f"Trying an alternative general URL = {general_url}")
+    response = requests.get(general_url, headers=HEADERS, timeout=15)
   response.raise_for_status()
 
   generalData = response.json()
@@ -25,12 +30,12 @@ def scrape_deka_event(event, event_date:date) -> DekaResults:
   print(f"Config URL = {config_url}")
   config_response = requests.get(config_url, headers=HEADERS, timeout=15)
   config_lists = []
-  valid_contests = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  #valid_contests = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
   if (config_response.ok):
     config_response_json = config_response.json()
-    config_contests = config_response_json["contests"].keys()
-    if not config_contests is None:
-      valid_contests = config_contests
+    #config_contests = config_response_json["contests"].keys()
+    #if not config_contests is None:
+    #  valid_contests = config_contests
     config_lists = config_response_json["TabConfig"]["Lists"]
 
   key = generalData["key"]
@@ -40,6 +45,7 @@ def scrape_deka_event(event, event_date:date) -> DekaResults:
 
   deka = DekaResults()
   deka.name = event["name"]
+  deka.url = event["url"]
   deka.city = event["city"]
   deka.date = event_date
 
@@ -58,7 +64,10 @@ def scrape_deka_event(event, event_date:date) -> DekaResults:
         config_info = info_in_config_list
         break
 
-    details = config_info["Details"] or "details1" 
+    if config_info and isinstance(config_info, dict) and "Details" in config_info:
+      details = config_info["Details"] or "details1" 
+    else:
+      details = "details1"
     print(f"scraping results for [{list_name} (contest = {contest}, leader = {leader}, details = {details})]")
 
     deka_type = DekaTypeResults()
@@ -75,6 +84,10 @@ def scrape_deka_event(event, event_date:date) -> DekaResults:
     else:
       deka_type.type = DekaType.FIT
 
+    # we're going to ignore DEKA Mile and DEKA Strong
+    if (deka_type.type == DekaType.MILE or deka_type.type == DekaType.STRONG):
+      continue
+    
     list_name_encoded = urllib.parse.quote(list_name)
     elem_url = (
       f"https://{server}/{eventId}/RRPublish/data/list?"
@@ -132,7 +145,7 @@ def scrape_deka_event(event, event_date:date) -> DekaResults:
   return deka
 
 
-def scrape_deka_athlete_list_name(eventId:str, details:str, athlete_pid:int, category:CategoryResults):
+def scrape_deka_athlete_view(eventId:str, details:str, athlete_pid:int, category:CategoryResults):
   view_url = f"https://my.raceresult.com/{eventId}/{details}/view?lang=en&noVisitor=1&mid=0&standalone=false&pid={athlete_pid}"
   #print(f"Athlete View URL = {view_url}")
   view_response = requests.get(view_url, headers=HEADERS, timeout=15)
@@ -140,9 +153,14 @@ def scrape_deka_athlete_list_name(eventId:str, details:str, athlete_pid:int, cat
     list_name = "Online%7CDetailList"
   else:
     list_name = "Online%7CDetailList-Team"
+
+  legs = []
+
   if view_response.ok:
     view_json = view_response.json()
     view_elements = view_json.get("Elements", [])
+
+    # first try to scrape the list name
     if view_elements and isinstance(view_elements, list):
       first_element = view_elements[0]
       view_children = first_element.get("Children", [])
@@ -153,7 +171,20 @@ def scrape_deka_athlete_list_name(eventId:str, details:str, athlete_pid:int, cat
         if config_list_name:
           list_name = quote(config_list_name)
 
-  return list_name
+    # then let's try to get the legs (partial times for runs and zones)  
+    view_legs = {}
+    if "Data" in view_json:
+      view_data = view_json["Data"]
+      if view_data and isinstance(view_data, dict) and "SplitsAndLegs" in view_data:
+        view_splits_and_legs = view_data["SplitsAndLegs"]
+        if view_splits_and_legs and isinstance(view_splits_and_legs, dict) and "Legs" in view_splits_and_legs:
+          view_legs = view_splits_and_legs["Legs"]
+    if view_legs and isinstance(view_legs, list):
+      legs = view_legs
+
+  return list_name, legs
+
+
 
 def scrape_deka_category(event, deka_type:DekaTypeResults, key:str, server:str, list_name_encoded:str, details:str, contest:str, category_name:str, encoded_category:str, categoryDepth:int) -> CategoryResults:
 
@@ -190,7 +221,7 @@ def scrape_deka_category(event, deka_type:DekaTypeResults, key:str, server:str, 
   #print(responseData)
   response_data_fields = responseJson["DataFields"]
 
-  num_athletes = len(responseData)
+  num_athletes = len(responseData) - 1
   print(f"Scraping all {num_athletes} atheletes for {category_name}...")
 
   category_athletes:list[AthleteResult] = []
@@ -202,11 +233,11 @@ def scrape_deka_category(event, deka_type:DekaTypeResults, key:str, server:str, 
       athlete.from_json(category.gender, athleteData, response_data_fields)
       athlete_pid = athleteData[1]
 
-      list_name = scrape_deka_athlete_list_name(eventId, details, athlete_pid, category)
+      list_name, legs = scrape_deka_athlete_view(eventId, details, athlete_pid, category)
 
       url_start = f"https://{server}/{eventId}/{details}/list?key={key}&listname={list_name}"
 
-      athlete = scrape_athlete_result(athlete, url_start, key, contest, athlete_pid, details)
+      athlete = scrape_athlete_result(athlete, url_start, key, contest, athlete_pid, details, legs)
       #print(athlete)
       category_athletes.append(athlete)
 
@@ -217,7 +248,7 @@ def scrape_deka_category(event, deka_type:DekaTypeResults, key:str, server:str, 
 
 
 
-def scrape_athlete_result(athlete: AthleteResult, url_start:str, key:str, contest:str, pid: str, details:str) -> AthleteResult:
+def scrape_athlete_result(athlete: AthleteResult, url_start:str, key:str, contest:str, pid: str, details:str, legs:list) -> AthleteResult:
 
   url = f"{url_start}&page={details}&r=pid&pid={pid}&contest={contest}"
 
@@ -235,23 +266,34 @@ def scrape_athlete_result(athlete: AthleteResult, url_start:str, key:str, contes
     zone_times = []
     for index in range(1, 11):
       # find the run and zone times
-      run_time_label_start = f"Format([Run{index}.DECIMAL]"
-      zone_time_label_start = f"Format([Z{index}Result.DECIMAL]"
-      run_time_index = next((i for i, s in enumerate(raw_data_fields) if s.startswith(run_time_label_start)), -1)
-      zone_time_index = next((i for i, s in enumerate(raw_data_fields) if s.startswith(zone_time_label_start)), -1)
-      #print(f"Run {index} time index = {run_time_index}, zone {index} time index = {zone_time_index}")
+      run_time = None
+      if legs:
+        run_time_index = next((i for i, l in enumerate(legs) if ("Name" in l and re.search(rf"[Rr]un.*{index}$", l["Name"]))), -1)
+        if run_time_index >= 0 and "Time" in legs[run_time_index]:
+          run_time = parse_duration(legs[run_time_index]["Time"])
+      if not run_time:
+        run_time_label_start = f"Format([Run{index}.DECIMAL]"
+        run_time_index = next((i for i, s in enumerate(raw_data_fields) if s.startswith(run_time_label_start)), -1)
+        if (run_time_index >= 0):
+          run_time_str = raw_data[run_time_index]
+          run_time = parse_duration(run_time_str)
+        else:
+          run_time = timedelta(0)
 
-      # get now the data
-      if (run_time_index >= 0):
-        run_time_str = raw_data[run_time_index]
-        run_time = parse_duration(run_time_str)
-      else:
-        run_time = timedelta(0)
-      if (zone_time_index >= 0):
-        zone_time_str = raw_data[zone_time_index]
-        zone_time = parse_duration(zone_time_str)
-      else:
-        zone_time = timedelta(0)
+      zone_time = None
+      if legs:
+        zone_time_index = next((i for i, l in enumerate(legs) if ("Name" in l and re.search(rf"[Zz]one.*{index} ", l["Name"]))), -1)
+        if zone_time_index >= 0 and "Time" in legs[zone_time_index]:
+          zone_time = parse_duration(legs[zone_time_index]["Time"])
+      if not zone_time:
+        zone_time_label_start = f"Format([Z{index}Result.DECIMAL]"
+        zone_time_index = next((i for i, s in enumerate(raw_data_fields) if s.startswith(zone_time_label_start)), -1)
+        if (zone_time_index >= 0):
+          zone_time_str = raw_data[zone_time_index]
+          zone_time = parse_duration(zone_time_str)
+        else:
+          zone_time = timedelta(0)
+
       #print(f"Run {index} time = {run_time}. Zone {index} time = {zone_time}")
 
       # store the times

@@ -63,6 +63,7 @@ class DekaGender(Enum):
 
 class DekaResults:
   name:str = ""
+  url:str = ""
   city:str = ""
   date:date = date(2000, 1, 1)
   types:list[DekaTypeResults] = []
