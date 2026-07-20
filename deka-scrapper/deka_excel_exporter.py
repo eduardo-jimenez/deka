@@ -33,7 +33,9 @@ def export_to_excel(deka:DekaResults, filename:str):
   print(f"Exporting {deka} to {filename} (total of {len(deka.types)} types)")
 
   wb = Workbook()
-  wb.remove(wb.active)
+  ws = wb.active
+  if ws is not None:
+    wb.remove(ws)
 
   for deka_type in deka.types:
     #print(f"Adding sheet for {deka_type}")

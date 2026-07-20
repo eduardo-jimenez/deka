@@ -1,19 +1,19 @@
-Evento,Link
-DEKA Zaragoza 2024,https://my.raceresult.com/297279/
-DEKA Zaragoza 2025,https://my.raceresult.com/348477/
-DEKA Guadalajara 2024,https://my.raceresult.com/315047/
-DEKA Guadalajara 2025,https://my.raceresult.com/367449/
-DEKA Madrid 2023,https://my.raceresult.com/253887/
-DEKA Madrid 2024,https://my.raceresult.com/300261/
-DEKA Madrid 2025,https://my.raceresult.com/350519/
-DEKA Madrid 2026,https://my.raceresult.com/410443/
-DEKA Barcelona 2023,https://my.raceresult.com/264048/
-DEKA Barcelona 2024,https://my.raceresult.com/310453/
-DEKA Barcelona 2025,https://my.raceresult.com/362250/
-DEKA Barcelona 2026 Primavera,https://my.raceresult.com/388673/
-DEKA Tenerife 2023,https://my.raceresult.com/269842/
-DEKA Tenerife 2024,https://my.raceresult.com/316990/
-DEKA Tenerife 2025,https://my.raceresult.com/370624/
-DEKA Valencia 2024,https://my.raceresult.com/289928/
-DEKA Valencia 2025,https://my.raceresult.com/347348/
-DEKA Valencia 2026,https://my.raceresult.com/392196/
+Evento,Link,Ciudad,Fecha
+#DEKA Zaragoza 2024,https://my.raceresult.com/297279/,Zaragoza,29/06/2024
+DEKA Zaragoza 2025,https://my.raceresult.com/348477/,Zaragoza,05/07/2025
+#DEKA Guadalajara 2024,https://my.raceresult.com/315047/,Guadalajara,26/10/2024
+#DEKA Guadalajara 2025,https://my.raceresult.com/367449/,Guadalajara,25/10/2025
+#DEKA Madrid 2023,https://my.raceresult.com/253887/,Madrid,29/07/2023
+#DEKA Madrid 2024,https://my.raceresult.com/300261/,Madrid,28/07/2024
+#DEKA Madrid 2025,https://my.raceresult.com/350519/,Madrid,20/07/2025
+#DEKA Madrid 2026,https://my.raceresult.com/410443/,Madrid,18/07/2026
+#DEKA Barcelona 2023,https://my.raceresult.com/264048/,Barcelona,30/09/2023
+#DEKA Barcelona 2024,https://my.raceresult.com/310453/,Barcelona,28/09/2024
+#DEKA Barcelona 2025,https://my.raceresult.com/362250/,Barcelona,27/09/2025
+#DEKA Barcelona 2026 Primavera,https://my.raceresult.com/388673/,Barcelona,28/03/2026
+#DEKA Tenerife 2023,https://my.raceresult.com/269842/,Tenerife,18/11/2023
+#DEKA Tenerife 2024,https://my.raceresult.com/316990/,Tenerife,16/11/2024
+#DEKA Tenerife 2025,https://my.raceresult.com/370624/,Tenerife,15/11/2025
+#DEKA Valencia 2024,https://my.raceresult.com/289928/,Valencia,11/05/2024
+#DEKA Valencia 2025,https://my.raceresult.com/347348/,Valencia,28/06/2025
+#DEKA Valencia 2026,https://my.raceresult.com/392196/,Valencia,18/04/2026

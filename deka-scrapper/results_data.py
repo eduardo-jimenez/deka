@@ -1,13 +1,14 @@
 from __future__ import annotations
 from enum import Enum
 from datetime import timedelta, date
+from typing import Optional
 
 
-def parse_duration(s:str) -> timedelta:
-  if s == "":
+def parse_duration(durationStr:str) -> timedelta:
+  if durationStr == "":
     return timedelta(0)
 
-  parts = s.split(':')
+  parts = durationStr.split(':')
   parts = [p.strip() for p in parts]
   
   if len(parts) == 2:
@@ -19,7 +20,7 @@ def parse_duration(s:str) -> timedelta:
     m = int(parts[1])
     s = float(parts[2])
   else:
-    print(f"Warning! Error trying to parse duration ({s}). Returning 0")
+    print(f"Warning! Error trying to parse duration ({durationStr}). Returning 0")
     h = 0
     m = 0
     s = 0
@@ -33,7 +34,7 @@ class DekaType(Enum):
   MILE = 3
   STRONG = 4
 
-  def get_name(type:int) -> str:
+  def get_name(type:DekaType) -> str:
     match type:
       case DekaType.FIT:
         return "DEKA Fit"
@@ -50,7 +51,7 @@ class DekaGender(Enum):
   FEMALE = 2
   MIXED = 3
 
-  def get_name(gender:int) -> str:
+  def get_name(gender:DekaGender) -> str:
     match gender:
       case DekaGender.MALE:
         return "Male"
@@ -75,8 +76,8 @@ class DekaResults:
   
 class DekaTypeResults:
   name:str = ""
-  type:int = DekaType.FIT
-  deka:DekaResults = None
+  type:DekaType = DekaType.FIT
+  deka:Optional[DekaResults] = None
   categories:list[CategoryResults] = []
 
   def __str__(self):
@@ -86,8 +87,8 @@ class DekaTypeResults:
 class CategoryResults:
   name:str = ""
   is_teams:bool = False
-  gender:int = DekaGender.MALE
-  deka_type:DekaTypeResults = None
+  gender:DekaGender = DekaGender.MALE
+  deka_type:Optional[DekaTypeResults] = None
   athletes:list[AthleteResult] = []
 
   def __str__(self):
@@ -96,12 +97,13 @@ class CategoryResults:
 
 class AthleteResult:
   name:str = ""
-  gender:int = DekaGender.MALE
+  gender:DekaGender = DekaGender.MALE
+  category:CategoryResults
   time = timedelta
   run_times:list[timedelta] = []
   zone_times:list[timedelta] = []
 
-  def from_json(self, gender:int, data_json_list:list):
+  def from_json(self, gender:DekaGender, data_json_list:list):
     #print(f"parsing {data_json_list} for athlete data [is_teams = {is_teams}]")
     self.gender = gender
     self.name = data_json_list[4]
