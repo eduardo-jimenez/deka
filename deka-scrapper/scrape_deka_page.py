@@ -40,7 +40,10 @@ def scrape_deka_event(event, event_date:date) -> DekaResults:
 
   key = generalData["key"]
   server = generalData["server"]
-  lists = generalData["lists"]
+  if "lists" in generalData:
+    lists = generalData["lists"]
+  else:
+    lists = config_lists
   #contests = generalData["contests"]
 
   deka = DekaResults()
@@ -96,7 +99,22 @@ def scrape_deka_event(event, event_date:date) -> DekaResults:
     )
     print(f"Fetching results from {elem_url}")
     response = requests.get(elem_url, headers=HEADERS, timeout=15)
-    response.raise_for_status()
+    if not response.ok:
+      # in newer DEKAs it looks like it's not using RRPublish/data but instead simply results. I didn't see anywhere in the config
+      # that marks that this is the case, but probably I don't know how to interpret the data
+      elem_url = (
+        f"https://{server}/{eventId}/results/list?"
+        f"key={key}&listname={list_name_encoded}"
+        f"&page=results&contest={contest}&r=leader&l={leader}"
+      )
+      response = requests.get(elem_url, headers=HEADERS, timeout=15)
+
+    if not response.ok:
+      print(f"Error requesting list of athletes for [{list_name}]! Resonse = {response}")
+      continue
+
+    # if it fails we just skip the element
+    #response.raise_for_status()
     elem_response_json = response.json()
     elem_data = elem_response_json["data"]
 
@@ -198,7 +216,7 @@ def scrape_deka_category(event, deka_type:DekaTypeResults, key:str, server:str, 
   print(f"Scraping DEKA category {category.name} ({encoded_category})")
   if "co-ed" in encoded_category.lower():
     category.gender = DekaGender.MIXED
-  elif "female" in encoded_category.lower():
+  elif "female" or "femenino" in encoded_category.lower():
     category.gender = DekaGender.FEMALE
   else:
     category.gender = DekaGender.MALE
