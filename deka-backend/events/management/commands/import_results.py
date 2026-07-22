@@ -4,8 +4,10 @@ from pathlib import Path
 import re
 
 import openpyxl
+import openpyxl.worksheet.worksheet
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
+from datetime import datetime
 
 from events.models import AthleteResult, DekaEvent
 
@@ -13,9 +15,9 @@ from events.models import AthleteResult, DekaEvent
 class Command(BaseCommand):
   help = "Import athlete results from an .xlsx file into the database"
   NAME_COLUMN = 0
-  CATEGORY_COLUMN = 1
+  DEKA_TYPE_COLUMN = 1
   GENDER_COLUMN = 2
-  DEKA_TYPE_COLUMN = 3
+  CATEGORY_COLUMN = 3
   TOTAL_TIME_COLUMN = 4
   RUN_TIME_COLUMNS = list({5, 7, 9, 11, 13, 15, 17, 19, 21, 23})
   ZONE_TIME_COLUMNS = list({6, 8, 10, 12, 14, 16, 18, 20, 22, 24})
@@ -29,7 +31,45 @@ class Command(BaseCommand):
       help="Event name to associate with all imported rows. Defaults to the first sheet name.",
     )
 
-  def import_sheet(self, sheet, event):
+
+  def import_event_info(self, sheet:openpyxl.worksheet.worksheet.Worksheet, event:DekaEvent):
+    # The first column is the type of info for the event and the second is the event info in this order:
+    # Name
+    # URL
+    # City
+    # Start Date
+    # End Date
+    print(f"Importing Event Info from sheet '{sheet.title}' with {sheet.max_row} rows")
+    rows = list(sheet.iter_rows(values_only=True))
+    if not rows:
+      raise CommandError("The Event Info sheet is not valid or empty?!")
+    
+    if len(rows) < 5:
+      raise CommandError("The Event Info page should have 5 rows!")
+    
+    # Read the event info from the sheet
+    event_name = str(rows[0][1])
+    event_url = str(rows[1][1])
+    event_city = str(rows[2][1])
+    start_date = rows[3][1]
+    end_date = rows[4][1]
+    if not isinstance(start_date, datetime):
+      start_date = datetime.strptime(str(start_date), "%d/%m/%Y")
+    if not isinstance(end_date, datetime):
+      end_date = datetime.strptime(str(end_date), "%d/%m/%Y")
+
+    # assign it to the event
+    if event_name and len(event_name) > 0:
+      event.name = event_name
+    event.url = event_url
+    event.city = event_city
+    event.start_date = start_date
+    event.end_date = end_date
+
+    # finally update it in the database
+    event.save()
+
+  def import_sheet(self, sheet:openpyxl.worksheet.worksheet.Worksheet, event:DekaEvent):
     print(f"Importing from sheet '{sheet.title}' with {sheet.max_row - 1} data rows")
     rows = list(sheet.iter_rows(values_only=True))
     if not rows:
@@ -63,7 +103,7 @@ class Command(BaseCommand):
           print(f"Row {index} skipped: DEKA type is missing")
           continue
 
-        orig_category = row[self.CATEGORY_COLUMN]
+        orig_category = str(row[self.CATEGORY_COLUMN])
         if not orig_category:
           skipped += 1
           print(f"Row {index} skipped: Category is missing")
@@ -87,15 +127,18 @@ class Command(BaseCommand):
             gender = "Mixed"
 
         category = orig_category
-        if "Elite" in orig_category:
+        orig_category_lower = orig_category.lower()
+        if "elite" in orig_category_lower or "élite" in orig_category_lower:
           category = "Elite"
-        elif "Age Group" in orig_category or "AgeGroup" in orig_category:
+        elif "age group" in orig_category_lower or "agegroup" in orig_category_lower or ("grupo" in orig_category_lower and "edad" in orig_category_lower):
           category = "Age Group"
-          match = re.search(r"\d{2}-\d{2}", orig_category)
-          if match:
-            age_group = match.group(0)
-        elif "Open" in orig_category:
+        elif "open" in orig_category_lower:
           category = "Open"
+
+        # if the category has the age grupo, add it
+        match = re.search(r"\d{2}-\d{2}", orig_category)
+        if match:
+          age_group = match.group(0)
 
         athlete_result, created = AthleteResult.objects.get_or_create(
           event=event,
@@ -134,7 +177,7 @@ class Command(BaseCommand):
           #print(f"Row {index} imported: {athlete_result}")
         else:
           # Update the existing record
-          athlete_result.gender = gender
+          athlete_result.gender = gender # pyright: ignore[reportAttributeAccessIssue]
           athlete_result.age_group = age_group
           athlete_result.total_time = total_time
           athlete_result.run_1 = run_times[0]
@@ -159,6 +202,7 @@ class Command(BaseCommand):
           athlete_result.zone_10 = zone_times[9]
           athlete_result.save()
 
+
   def handle(self, *args, **options):
     # Get the input file from the command line arguments and validate it
     input_path = Path(options["file_path"]).expanduser().resolve()
@@ -180,7 +224,10 @@ class Command(BaseCommand):
 
     for sheet_name in workbook.sheetnames:
       sheet = workbook[sheet_name]
-      self.import_sheet(sheet, event)
+      if "event info" in sheet_name.lower():
+        self.import_event_info(sheet, event)
+      else:
+        self.import_sheet(sheet, event)
 
 
   def _normalize_header(self, value):

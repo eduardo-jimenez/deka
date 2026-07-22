@@ -3,6 +3,10 @@ from django.db import models
 
 class DekaEvent(models.Model):
   name = models.CharField(max_length=255, unique=True)
+  url = models.CharField(max_length=255, blank=True)
+  city = models.CharField(max_length=64, blank=True)
+  start_date = models.DateField(blank=True, null=True)
+  end_date = models.DateField(blank=True, null=True)
 
   class Meta:
     verbose_name = "Event"
