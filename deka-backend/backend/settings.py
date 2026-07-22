@@ -27,7 +27,11 @@ SECRET_KEY = 'django-insecure-($=*e#y2)_i76+vu)pt3(i@3&j4t=eumiv9kds2977yxqy7q#q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+  "deka-results-analyzer.onrender.com",
+  "localhost",
+  "127.0.0.1",
+]
 
 
 # Application definition
