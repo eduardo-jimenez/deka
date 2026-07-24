@@ -5,6 +5,7 @@ import type { Filters, AthleteResult, PaginatedResponse } from './types'
 
 const pageSizes = [25, 50, 100]
 const selectedAthletesStorageKey = 'deka-selected-athletes'
+const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '')
 
 const ZoneNames = [
   "Zona 1 - RAM Lunges",
@@ -22,7 +23,7 @@ const ZoneNames = [
 
 function fetchResults(params: Record<string, string | number>) {
   return axios
-    .get<PaginatedResponse>('/api/athlete-results/', { params })
+    .get<PaginatedResponse>(`${apiBaseUrl}/api/athlete-results/`, { params })
     .then(res => res.data)
 }
 
@@ -119,6 +120,22 @@ function App() {
 
   // Comparer
 
+  const getSelectedAthletesRunInfo = (index: number) => {
+    return selectedAthleteList.map(athlete => {
+      const runTime = athlete[`run_${index + 1}` as keyof AthleteResult] as string | undefined;
+      return (
+        <td>{formatTotalTime(runTime)}</td>
+    )})
+  }
+
+  const getSelectedAthletesZoneInfo = (index: number) => {
+    return selectedAthleteList.map(athlete => {
+      const zoneTime = athlete[`zone_${index + 1}` as keyof AthleteResult] as string | undefined;
+      return (
+        <td>{formatTotalTime(zoneTime)}</td>
+    )})
+  }
+
   const showSelectedAthletesComparison = () => {
     const returnStr = selectedAthleteList.length === 0 ? (
           <p>Select athletes with the star button to see their times here.</p>
@@ -130,7 +147,7 @@ function App() {
                 <tr>
                   <th>Atleta</th>
                   {selectedAthleteList.map(athlete => (
-                      <th>{athlete.athlete_name}</th>
+                    <th>{athlete.athlete_name}</th>
                   ))}
                 </tr>
               </thead>
@@ -193,22 +210,6 @@ function App() {
         )
 
       return returnStr
-  }
-
-  const getSelectedAthletesRunInfo = (index: number) => {
-    return selectedAthleteList.map(athlete => {
-      const runTime = athlete[`run_${index + 1}` as keyof AthleteResult] as string | undefined;
-      return (
-        <td>{formatTotalTime(runTime)}</td>
-    )})
-  }
-
-  const getSelectedAthletesZoneInfo = (index: number) => {
-    return selectedAthleteList.map(athlete => {
-      const zoneTime = athlete[`zone_${index + 1}` as keyof AthleteResult] as string | undefined;
-      return (
-        <td>{formatTotalTime(zoneTime)}</td>
-    )})
   }
 
   return (
