@@ -238,3 +238,11 @@ header h1 {
 .times-table th {
   background: #f1f5f9;
 }
+
+.time-difference-positive {
+  color: #FF2020
+}
+
+.time-difference-negative {
+  color: #108010
+}

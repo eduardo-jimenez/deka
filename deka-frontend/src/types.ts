@@ -36,6 +36,10 @@ export interface AthleteResult {
   zone_8?: string
   zone_9?: string
   zone_10?: string
+
+  dekaMarkTime?: number
+  runTimes: Array<number | undefined>
+  zoneTimes: Array<number | undefined>
 }
 
 export interface PaginatedResponse {
