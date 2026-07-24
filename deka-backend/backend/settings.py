@@ -15,23 +15,34 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-ENV = os.getenv("ENV", "dev")  # "dev" or "prod"
+ENV = os.getenv("ENV", "dev").lower()  # "dev" or "prod"
+
+
+def get_env_list(name, default):
+    value = os.getenv(name, default)
+    return [item.strip() for item in value.split(",") if item.strip()]
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-($=*e#y2)_i76+vu)pt3(i@3&j4t=eumiv9kds2977yxqy7q#q'
+SECRET_KEY = os.getenv(
+    "SECRET_KEY",
+    "django-insecure-($=*e#y2)_i76+vu)pt3(i@3&j4t=eumiv9kds2977yxqy7q#q",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "False").lower() in {"1", "true", "yes", "on"}
 
-ALLOWED_HOSTS = [
-  "deka-results-analyzer.onrender.com",
-  "localhost",
-  "127.0.0.1",
-]
+ALLOWED_HOSTS = get_env_list(
+    "ALLOWED_HOSTS",
+    "localhost,127.0.0.1,deka-results-analyzer.onrender.com",
+)
+CSRF_TRUSTED_ORIGINS = get_env_list(
+    "CSRF_TRUSTED_ORIGINS",
+    "https://deka-results-analyzer.onrender.com",
+)
 
 
 # Application definition
@@ -43,11 +54,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'events.apps.EventsConfig',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -124,6 +137,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+CORS_ALLOWED_ORIGINS = get_env_list(
+    "CORS_ALLOWED_ORIGINS",
+    "http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:5173",
+)
+CORS_ALLOWED_ORIGIN_REGEXES = [r"^https://.*\.netlify\.app$"]
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

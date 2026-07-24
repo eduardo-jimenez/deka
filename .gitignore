@@ -1,3 +1,4 @@
 **/__pycache__/**
 deka-frontend/node_modules/
 deka-frontend/dist/
+deka-frontend/.env.production
