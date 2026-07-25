@@ -20,12 +20,16 @@ function CompareApp() {
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(50)
   const [expandedResultId, setExpandedResultId] = useState<number | null>(null)
-  const [selectedAthletes, setSelectedAthletes] = useState<Record<number, AthleteResult>>(() => {
+  const [selectedAthletes, setSelectedAthletes] = useState<AthleteResult[]>(() => {
     try {
       const storedAthletes = localStorage.getItem(selectedAthletesStorageKey)
-      return storedAthletes ? JSON.parse(storedAthletes) : {}
+      if (!storedAthletes)
+        return []
+      const parsedAthletes = storedAthletes ? JSON.parse(storedAthletes) : {}
+
+      return Array.isArray(parsedAthletes) ? parsedAthletes : Object.values(parsedAthletes)
     } catch {
-      return {}
+      return []
     }
   })
 
@@ -57,15 +61,22 @@ function CompareApp() {
     setPage(1)
   }
 
-  const toggleAthleteSelection = (athlete: AthleteResult) => {
-    setSelectedAthletes(current => {
-      if (current[athlete.id]) {
-        const { [athlete.id]: _, ...remainingAthletes } = current
-        return remainingAthletes
-      }
+  const isAthleteSelected = (athlete: AthleteResult) => {
+    return selectedAthletes.some(a => a.id == athlete.id);
+  }
 
-      return { ...current, [athlete.id]: athlete }
-    })
+  const toggleAthleteSelection = (athlete: AthleteResult) => {
+    if (isAthleteSelected(athlete)) {
+      removeAthleteFromSelection(athlete);
+    } else {
+      setSelectedAthletes(current => [...current, athlete]);
+    }
+  }
+
+  const removeAthleteFromSelection = (athlete: AthleteResult) => {
+    setSelectedAthletes(current => 
+      current.filter(item => item.id != athlete.id)
+    )
   }
 
   // Comparer
@@ -104,13 +115,13 @@ function CompareApp() {
       if (compAthlete === undefined)
       {
         return (
-          <td>{runTime}</td>
+          <td key={athlete.id}>{runTime}</td>
         )
       }
       else
       {
         return (
-          <td>{runTime} {getTimeDifferenceForRunFormatted(athlete, compAthlete, index)}</td>
+          <td key={athlete.id}>{runTime} {getTimeDifferenceForRunFormatted(athlete, compAthlete, index)}</td>
         )
       }
     })
@@ -124,13 +135,13 @@ function CompareApp() {
       if (compAthlete === undefined)
       {
         return (
-          <td>{zoneTime}</td>
+          <td key={athlete.id}>{zoneTime}</td>
         )
       }
       else
       {
         return (
-          <td>{zoneTime}  {getTimeDifferenceForZoneFormatted(athlete, compAthlete, index)}</td>
+          <td key={athlete.id}>{zoneTime}  {getTimeDifferenceForZoneFormatted(athlete, compAthlete, index)}</td>
         )
       }
     })
@@ -144,13 +155,13 @@ function CompareApp() {
       if (compAthlete === undefined)
       {
         return (
-          <td>{zoneTime}</td>
+          <td key={athlete.id}>{zoneTime}</td>
         )
       }
       else
       {
         return (
-          <td>{zoneTime}  {getFinalTimeDifferenceFormatted(athlete, compAthlete)}</td>
+          <td key={athlete.id}>{zoneTime}  {getFinalTimeDifferenceFormatted(athlete, compAthlete)}</td>
         )
       }
     })
@@ -167,7 +178,15 @@ function CompareApp() {
                 <tr>
                   <th>Atleta</th>
                   {selectedAthleteList.map(athlete => (
-                    <th>{athlete.athlete_name}</th>
+                    <th key={athlete.id}>
+                      {athlete.athlete_name}
+                      <button 
+                        className="close-button"
+                        type="button"
+                        onClick={() => removeAthleteFromSelection(athlete)}>
+                        <img src="icons/close.png" height="24px" />
+                      </button>
+                    </th>
                   ))}
                 </tr>
               </thead>
@@ -175,31 +194,31 @@ function CompareApp() {
                 <tr>
                   <td>Evento</td>
                   {selectedAthleteList.map(athlete => (
-                    <td>{athlete.event_name}</td>
+                    <td key={athlete.id}>{athlete.event_name}</td>
                   ))}
                 </tr>
                 <tr>
                   <td>DEKA Type</td>
                   {selectedAthleteList.map(athlete => (
-                    <td>{athlete.deka_type}</td>
+                    <td key={athlete.id}>{athlete.deka_type}</td>
                   ))}
                 </tr>
                 <tr>
                   <td>Género</td>
                   {selectedAthleteList.map(athlete => (
-                    <td>{athlete.gender}</td>
+                    <td key={athlete.id}>{athlete.gender}</td>
                   ))}
                 </tr>
                 <tr>
                   <td>Categoría</td>
                   {selectedAthleteList.map(athlete => (
-                    <td>{athlete.category}</td>
+                    <td key={athlete.id}>{athlete.category}</td>
                   ))}
                 </tr>
                 <tr>
                   <td>Grupo de Edad</td>
                   {selectedAthleteList.map(athlete => (
-                    <td>{athlete.age_group}</td>
+                    <td key={athlete.id}>{athlete.age_group}</td>
                   ))}
                 </tr>
                 <tr>
@@ -237,6 +256,10 @@ function CompareApp() {
       <section className="selected-athletes">
         {showSelectedAthletesComparison()}
       </section>
+
+      <h2>
+        Search for Athletes
+      </h2>
 
       <SearchPanel
         inputs={inputs}

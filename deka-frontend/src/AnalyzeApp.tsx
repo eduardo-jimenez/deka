@@ -28,7 +28,7 @@ function AnalyzeApp() {
       return {}
     }
   })
-  const [selectedAthletes, setSelectedAthletes] = useState<Record<number, AthleteResult>>([])
+  const [selectedAthletes, setSelectedAthletes] = useState<AthleteResult[]>([])
 
   const resultQuery = useQuery<PaginatedResponse, Error>({
     queryKey: ['results', filters, page, pageSize],
@@ -59,7 +59,7 @@ function AnalyzeApp() {
 
   const toggleAthleteSelection = (athlete: AthleteResult) => {
     setAnalyzeAthlete(athlete);
-    setSelectedAthletes({[athlete.id]: athlete})
+    setSelectedAthletes(() => [athlete])
   }
 
 

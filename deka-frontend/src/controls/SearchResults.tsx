@@ -6,7 +6,7 @@ interface SearchResultsProps {
   isError: boolean
   results: AthleteResult[]
   expandedResultId: number | null
-  selectedAthletes: Record<number, AthleteResult>
+  selectedAthletes: AthleteResult[]
   showSelectAthlete: boolean
   onToggleAthleteSelection: (value: AthleteResult) => void
   allowShowingTimes: boolean
@@ -25,6 +25,10 @@ export function SearchResults({
   onShowTimesForAthlete,
 }: SearchResultsProps) {
   const numColumns = allowShowingTimes ? 8 : 7;
+
+  const isAthleteSelected = (athlete: AthleteResult) => {
+    return selectedAthletes.some(a => a.id == athlete.id);
+  }
 
   return (
     <section className="results">
@@ -53,7 +57,7 @@ export function SearchResults({
           <tbody>
             {results.map(item => {
               const isExpanded = expandedResultId === item.id
-              const isSelected = Boolean(selectedAthletes[item.id])
+              const isSelected = isAthleteSelected(item)
 
               return (
                 <Fragment key={item.id}>
