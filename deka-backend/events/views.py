@@ -168,6 +168,11 @@ def analyze_performance(request):
       "total_zone_time_perc": analyzer.get_total_zone_time_percentile(),
       "run_time_percs": run_time_percs,
       "zone_time_percs": zone_time_percs,
+      "total_time_buckets": analyzer.total_time_buckets,
+      "total_run_time_buckets": analyzer.total_run_time_buckets,
+      "total_zone_time_buckets": analyzer.total_zones_time_buckets,
+      "run_time_buckets": analyzer.run_time_buckets,
+      "zone_time_buckets": analyzer.zone_time_buckets,
     },
   })
 

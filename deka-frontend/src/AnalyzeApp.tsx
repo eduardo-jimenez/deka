@@ -2,12 +2,13 @@ import { useEffect, useState, useRef } from 'react'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { fetchAvailableEvents, fetchSearchResults, fetchAnalyzeAthlete } from './utils/dbUtils'
 import { secondsToMinSecsStr } from './utils/timeUtils'
-import type { Filters, AthleteResult, EventAvailableResponse, PaginatedResponse, AnalysisParams } from './utils/types'
+import type { Filters, AthleteResult, EventAvailableResponse, PaginatedResponse, AnalysisParams, AnalysisResults } from './utils/types'
 import { getSavedFilters, saveFilters } from './utils/filtersStorage'
 import { SearchPanel } from './controls/SearchPanel'
 import { PaginationControls } from './controls/PaginationControls'
 import { SearchResults } from './controls/SearchResults'
 import { Header } from './Header'
+import { AnalysisPanel } from './controls/AnalysisPanel'
 
 const analyzedAthleteStorageKey = 'deka-analyzed-athlete'
 
@@ -39,6 +40,7 @@ function AnalyzeApp() {
   const [selectedAthletes, setSelectedAthletes] = useState<AthleteResult[]>([])
   const [isAdvancedSearchVisible, setIsAdvancedSearchVisible] = useState(true)
   const [analysisFilters, setAnalysisFilters] = useState<AnalysisParams>(() => emptyAnalyzeParams)
+  const [analysisResults, setAnalysisResults] = useState<AnalysisResults | null>(null)
 
   const advancedSearchRef = useRef<HTMLElement>(null)
   const analyzeAthleteRef = useRef<HTMLElement>(null)
@@ -87,11 +89,12 @@ function AnalyzeApp() {
     setSelectedAthletes(() => [athlete])
     setAnalysisEvent(athlete.event_name)
     setAnalysisGender(athlete.gender)
+    setAnalysisResults(null)
     //setIsAdvancedSearchVisible(false)
     requestAnimationFrame(scrollToAnalyzeAthlete)
   }
 
-  const analyzeAthleteRace = () => {
+  const analyzeAthleteRace = async () => {
     if (!analyzeAthlete)
       return
 
@@ -103,7 +106,12 @@ function AnalyzeApp() {
 
     setAnalysisFilters(params)
 
-    fetchAnalyzeAthlete(params)
+    try {
+      const data = await fetchAnalyzeAthlete(params)
+      setAnalysisResults(data)
+    } catch (error) {
+      console.error('Could not analyze athlete:', error)
+    }
   }
 
   return (
@@ -143,6 +151,7 @@ function AnalyzeApp() {
                   setSelectedAthletes([])
                   setAnalysisEvent('')
                   setAnalysisGender('')
+                  setAnalysisResults(null)
                   setAnalysisFilters(emptyAnalyzeParams)
                 }}
               >
@@ -174,6 +183,8 @@ function AnalyzeApp() {
           </div>
         </section>
       )}
+
+      <AnalysisPanel results={analysisResults} />
 
       <section className="advanced-search" ref={advancedSearchRef}>
         <div className="advanced-search-heading">
