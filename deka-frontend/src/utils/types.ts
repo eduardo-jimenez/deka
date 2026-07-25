@@ -75,3 +75,19 @@ export interface EventAvailableResponse {
   count: number
   results: DekaEvent[]
 }
+
+export interface AnalysisParams {
+  athlete_id: number
+  event_name: string
+  gender: string
+}
+
+export interface AnalysisResults {
+  athlete_id: number
+  total_count: number
+  total_time_perc: number
+  total_run_time_perc: number
+  total_zone_time_perc: number
+  run_time_percs: number[]
+  zone_time_percs: number[]
+}

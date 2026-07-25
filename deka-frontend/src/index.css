@@ -161,6 +161,114 @@ header h1 {
   color: #475569;
 }
 
+.athelete-to-analyze-info {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 24px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.athlete-summary {
+  display: grid;
+  grid-template-columns:
+    minmax(220px, 2fr)
+    minmax(180px, 1.25fr)
+    minmax(140px, 1fr)
+    minmax(80px, 0.55fr)
+    minmax(70px, 0.45fr)
+    auto;
+  gap: 16px;
+}
+
+.athlete-summary > div,
+.analysis-controls label {
+  display: grid;
+  gap: 6px;
+}
+
+.athlete-summary-close-button {
+  align-self: center;
+  justify-self: end;
+  padding: 6px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.athlete-summary-close-button:hover {
+  background: #e2e8f0;
+}
+
+.athlete-summary-close-button img {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+.athlete-summary-athlete strong {
+  font-size: 1rem;
+}
+
+.athlete-summary-gender,
+.athlete-summary-time {
+  font-size: 0.9rem;
+}
+
+.athlete-summary-label,
+.analysis-controls label {
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.analysis-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 16px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.analysis-controls select,
+.analysis-controls button {
+  min-height: 42px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.analysis-controls select {
+  border: 1px solid #d1d5db;
+  background: #fff;
+}
+
+.analysis-controls button {
+  border: 1px solid #1d4ed8;
+  background: #1d4ed8;
+  color: #fff;
+  cursor: pointer;
+}
+
+.analysis-controls button:hover {
+  background: #1e40af;
+}
+
+@media (max-width: 760px) {
+  .athlete-summary,
+  .analysis-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .analysis-controls button {
+    width: 100%;
+  }
+}
+
 .advanced-search-heading {
   display: flex;
   align-items: center;

@@ -61,3 +61,4 @@ class AthleteResult(models.Model):
 
   def __str__(self) -> str:
     return f"{self.athlete_name} ({self.event.name})"
+

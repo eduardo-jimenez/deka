@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { EventAvailableResponse, PaginatedResponse } from './types'
+import type { AnalysisParams, EventAvailableResponse, PaginatedResponse, AnalysisResults } from './types'
 import { formatTimeFromResults, timeToSeconds } from './timeUtils'
 
 const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '')
@@ -54,4 +54,12 @@ export function fetchAvailableEvents() {
     .get<EventAvailableResponse>(`${apiBaseUrl}/api/events/`)
     .then(res => res.data)
 }
+
+export function fetchAnalyzeAthlete(params: AnalysisParams) {
+  return axios
+    .get<AnalysisResults>(`${apiBaseUrl}/api/analyze-athlete/`, { params })
+    .then(res => res.data)
+    //.then(data => console.log(data))
+}
+
 

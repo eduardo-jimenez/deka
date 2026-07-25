@@ -1,9 +1,11 @@
 import logging
+import json
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import JsonResponse
 
 from events.models import AthleteResult, DekaEvent
+from events.analysis import AthleteAnalyzer
 
 
 def athlete_results(request):
@@ -109,5 +111,63 @@ def events_available(request):
   return JsonResponse({
     "count": events.count(),
     "results": list(events),
+  })
+
+
+def analyze_performance(request):
+  athlete_id = request.GET.get("athlete_id", "").strip()
+  event_name = request.GET.get("event_name", "").strip()
+  gender = request.GET.get("gender", "").strip()
+
+  logger = logging.getLogger(__name__)
+  logger.info(f"Analyzing athlete with id {athlete_id}. Event = {event_name}. Gender = {gender}")
+
+  # First acquire the athlete info
+  athlete_queryset = AthleteResult.objects.select_related("event")
+  try:
+    athlete = athlete_queryset.get(pk=athlete_id)
+  except AthleteResult.DoesNotExist:
+    return JsonResponse({"error": "Athlete not found"}, status=404)
+  except AthleteResult.MultipleObjectsReturned:
+    return JsonResponse({"error": "Multiple athletes found"}, status=400)
+
+  # now let's try to get all athletes to analyze it against
+  queryset = AthleteResult.objects.select_related("event")
+  filters = Q()
+  filters &= Q(deka_type__iexact=athlete.deka_type)
+  if event_name:
+    filters &= Q(event__name__icontains=event_name)
+  if gender:
+    filters &= Q(gender__iexact=gender)
+  athletes = queryset.filter(filters)
+
+  # gather the total of athletes to compare with
+  total_count = athletes.count()
+  if (total_count == 0):
+    return JsonResponse({"error": "No athletes found for the given parameters"}, status=404)
+
+  # analyze the data
+  analyzer = AthleteAnalyzer(athlete, athletes)
+  analyzer.analyze()
+
+  # generate the arrays of percetiles for run legs and zones
+  run_time_percs = []
+  zone_time_percs = []
+  for i in range(10):
+    # run_time_percs += f"{analyzer.get_run_time_percentile(i):.3f}"
+    # zone_time_percs += f"{analyzer.get_zone_time_percentile(i):.3f}"
+    run_time_percs.append(analyzer.get_run_time_percentile(i))
+    zone_time_percs.append(analyzer.get_zone_time_percentile(i))
+
+  return JsonResponse({
+    "data": {
+      "athlete_id": str(athlete.pk),
+      "total_count": total_count,
+      "total_time_perc": analyzer.get_total_time_percentile(),
+      "total_run_time_perc": analyzer.get_total_run_time_percentile(),
+      "total_zone_time_perc": analyzer.get_total_zone_time_percentile(),
+      "run_time_percs": run_time_percs,
+      "zone_time_percs": zone_time_percs,
+    },
   })
 
