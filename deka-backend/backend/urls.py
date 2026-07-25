@@ -17,9 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from events.views import athlete_results
+from events.views import athlete_results, events_available
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/athlete-results/', athlete_results, name='athlete-results'),
+    path('api/events/', events_available, name='events-available'),
 ]

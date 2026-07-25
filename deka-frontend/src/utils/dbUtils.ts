@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { PaginatedResponse } from './types'
+import type { EventAvailableResponse, PaginatedResponse } from './types'
 import { formatTimeFromResults, timeToSeconds } from './timeUtils'
 
 const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '')
@@ -47,5 +47,11 @@ export function fetchSearchResults(params: Record<string, string | number>) {
         ],
       }))
   }))
+}
+
+export function fetchAvailableEvents() {
+  return axios
+    .get<EventAvailableResponse>(`${apiBaseUrl}/api/events/`)
+    .then(res => res.data)
 }
 

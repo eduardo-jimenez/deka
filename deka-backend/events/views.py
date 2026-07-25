@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import JsonResponse
 
-from events.models import AthleteResult
+from events.models import AthleteResult, DekaEvent
 
 
 def athlete_results(request):
@@ -96,3 +96,18 @@ def athlete_results(request):
     "pages": paginator.num_pages,
     "results": results,
   })
+
+
+def events_available(request):
+  logger = logging.getLogger(__name__)
+  logger.info("Returning available events")
+
+  events = DekaEvent.objects.order_by("start_date", "name").values(
+    "id", "name", "url", "city", "start_date", "end_date"
+  )
+
+  return JsonResponse({
+    "count": events.count(),
+    "results": list(events),
+  })
+

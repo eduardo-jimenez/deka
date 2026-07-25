@@ -61,3 +61,17 @@ export interface PaginatedResponse {
   pages: number
   results: AthleteResult[]
 }
+
+export interface DekaEvent {
+  id: number
+  name: string
+  url: string
+  city: string
+  start_date: string
+  end_date: string
+}
+
+export interface EventAvailableResponse {
+  count: number
+  results: DekaEvent[]
+}
