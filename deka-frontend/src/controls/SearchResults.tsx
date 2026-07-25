@@ -1,5 +1,5 @@
 import { Fragment } from "react/jsx-runtime"
-import { AthleteResult, ZoneNames } from "./utils/types"
+import { AthleteResult, ZoneNames } from "../utils/types"
 
 interface SearchResultsProps {
   isLoading: boolean
@@ -24,6 +24,8 @@ export function SearchResults({
   allowShowingTimes,
   onShowTimesForAthlete,
 }: SearchResultsProps) {
+  const numColumns = allowShowingTimes ? 8 : 7;
+
   return (
     <section className="results">
       {isLoading && <p>Loading…</p>}
@@ -81,20 +83,24 @@ export function SearchResults({
                     <td>{item.gender}</td>
                     <td>{item.age_group}</td>
                     <td>{item.total_time}</td>
-                    <td>
-                      <button
-                        className="times-button"
-                        type="button"
-                        aria-expanded={isExpanded}
-                        onClick={() => onShowTimesForAthlete(isExpanded ? null : item.id)}
-                      >
-                        {isExpanded ? 'Hide times' : 'View times'}
-                      </button>
-                    </td>
+                    {
+                      allowShowingTimes && (
+                      <td>
+                        <button
+                          className="times-button"
+                          type="button"
+                          aria-expanded={isExpanded}
+                          onClick={() => onShowTimesForAthlete(isExpanded ? null : item.id)}
+                        >
+                          {isExpanded ? 'Hide times' : 'View times'}
+                        </button>
+                      </td>
+                      )
+                    }
                   </tr>
-                  {isExpanded && (
+                  {allowShowingTimes && isExpanded && (
                     <tr className="times-details">
-                      <td colSpan={9}>
+                      <td colSpan={numColumns}>
                         <table className="times-table">
                           <thead>
                             <tr>

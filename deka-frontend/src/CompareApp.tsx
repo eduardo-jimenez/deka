@@ -3,17 +3,16 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { fetchSearchResults } from './utils/dbUtils'
 import { secondsToMinSecsStr } from './utils/timeUtils'
 import type { Filters, AthleteResult, PaginatedResponse } from './utils/types'
-import { ZoneNames } from './utils/types'
-import { Header } from './Header'
-import { SearchPanel } from './SearchPanel'
-import { PaginationControls } from './PaginationControls'
 import { getSavedFilters, saveFilters } from './utils/filtersStorage'
-import { SearchResults } from './SearchResults'
+import { SearchPanel } from './controls/SearchPanel'
+import { PaginationControls } from './controls/PaginationControls'
+import { SearchResults } from './controls/SearchResults'
+import { Header } from './Header'
 
 const selectedAthletesStorageKey = 'deka-selected-athletes'
 
 
-function App() {
+function CompareApp() {
   // `inputs` are the staged values the user edits.
   // `filters` are the applied values used for querying.
   const [inputs, setInputs] = useState<Filters>(getSavedFilters())
@@ -48,7 +47,7 @@ function App() {
     localStorage.setItem(selectedAthletesStorageKey, JSON.stringify(selectedAthletes))
   }, [selectedAthletes])
 
-  const onChangeInput = (key: keyof Filters, value: string) => {
+  const onChangeInputs = (key: keyof Filters, value: string) => {
     setInputs(prev => ({ ...prev, [key]: value }))
   }
 
@@ -233,7 +232,7 @@ function App() {
 
   return (
     <div className="app-shell">
-      <Header currentPage="search" />
+      <Header currentPage="compare" />
 
       <section className="selected-athletes">
         {showSelectedAthletesComparison()}
@@ -241,7 +240,7 @@ function App() {
 
       <SearchPanel
         inputs={inputs}
-        onChange={onChangeInput}
+        onChange={onChangeInputs}
         onSearch={applySearch}
       />
 
@@ -261,11 +260,11 @@ function App() {
         selectedAthletes={selectedAthletes}
         showSelectAthlete={true}
         onToggleAthleteSelection={toggleAthleteSelection}
-        allowShowingTimes={true}
-        onShowTimesForAthlete={setExpandedResultId}
+        allowShowingTimes={false}
+        onShowTimesForAthlete={() => {}}
       />
     </div>
   )
 }
 
-export default App
+export default CompareApp

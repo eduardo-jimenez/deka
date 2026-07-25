@@ -1,4 +1,4 @@
-import type { Filters } from './utils/types'
+import type { Filters } from './types'
 import { getStoredValue, setStoredValue } from './storage'
 
 export const filtersStorageKey = 'deka-search-filters'

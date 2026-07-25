@@ -1,4 +1,4 @@
-import type { Filters } from './utils/types'
+import type { Filters } from '../utils/types'
 
 interface FiltersPanelProps {
   inputs: Filters
