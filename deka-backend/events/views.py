@@ -33,11 +33,11 @@ def athlete_results(request):
   if event_name:
     filters &= Q(event__name__icontains=event_name)
   if deka_type:
-    filters &= Q(deka_type__icontains=deka_type)
+    filters &= Q(deka_type__iexact=deka_type)
   if category:
     filters &= Q(category__icontains=category)
   if gender:
-    filters &= Q(gender__icontains=gender)
+    filters &= Q(gender__iexact=gender)
   if age_group:
     filters &= Q(age_group__icontains=age_group)
 

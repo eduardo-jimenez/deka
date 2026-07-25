@@ -1,3 +1,17 @@
+export const ZoneNames = [
+  "Zona 1 - RAM Lunges",
+  "Zona 2 - Row",
+  "Zona 3 - Box Step Over",
+  "Zona 4 - Medball Sit-Ups",
+  "Zona 5 - SkiErg",
+  "Zona 6 - Farmer's Carry",
+  "Zona 7 - Air Bike",
+  "Zona 8 - Dead Ball Over Wall",
+  "Zona 9 - Sled Push/Pull",
+  "Zona 10 - RAM Burpees"
+]
+
+
 export interface Filters {
   athlete_name: string
   event_name: string
