@@ -141,6 +141,32 @@ header h1 {
   color: #475569;
 }
 
+.advanced-search-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.advanced-search-heading h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.advanced-search-toggle {
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #1d4ed8;
+  cursor: pointer;
+}
+
+.advanced-search-toggle:hover {
+  background: #eff6ff;
+}
+
 .comparer-table {
   display: grid;
   gap: 16px;
@@ -153,11 +179,14 @@ header h1 {
   table-layout: fixed;
 }
 
-.comparer-table .times-table th,
-.comparer-table .times-table td {
+.comparer-table .times-table th {
   box-sizing: border-box;
   width: 200px;
   min-width: 200px;
+}
+.comparer-table .times-table td {
+  box-sizing: border-box;
+  width: 100px;
 }
 
 .comparer-table .times-table th {
@@ -324,7 +353,7 @@ header h1 {
 }
 
 .times-table {
-  max-width: 600px;
+  max-width: 1000px;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   overflow: hidden;
@@ -334,6 +363,7 @@ header h1 {
 .times-table th,
 .times-table td {
   padding: 10px 12px;
+  width: 100px;
 }
 
 .times-table th {

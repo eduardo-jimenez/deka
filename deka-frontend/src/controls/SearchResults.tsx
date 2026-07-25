@@ -8,6 +8,7 @@ interface SearchResultsProps {
   expandedResultId: number | null
   selectedAthletes: AthleteResult[]
   showSelectAthlete: boolean
+  canSelectNewAthletes: boolean
   onToggleAthleteSelection: (value: AthleteResult) => void
   allowShowingTimes: boolean
   onShowTimesForAthlete: (athleteId: number | null) => void
@@ -20,6 +21,7 @@ export function SearchResults({
   expandedResultId,
   selectedAthletes,
   showSelectAthlete,
+  canSelectNewAthletes,
   onToggleAthleteSelection,
   allowShowingTimes,
   onShowTimesForAthlete,
@@ -63,7 +65,7 @@ export function SearchResults({
                 <Fragment key={item.id}>
                   <tr>
                     <td>
-                      {showSelectAthlete && (
+                      {showSelectAthlete && (canSelectNewAthletes || isSelected) && (
                         <button
                           className="selection-button"
                           type="button"

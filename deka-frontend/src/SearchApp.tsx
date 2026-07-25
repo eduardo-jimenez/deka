@@ -69,6 +69,7 @@ function SearchApp() {
         expandedResultId={expandedResultId}
         selectedAthletes={[]}
         showSelectAthlete={false}
+        canSelectNewAthletes={false}
         onToggleAthleteSelection={(value) => {}}
         allowShowingTimes={true}
         onShowTimesForAthlete={setExpandedResultId}

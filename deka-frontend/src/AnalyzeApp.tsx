@@ -88,6 +88,7 @@ function AnalyzeApp() {
         expandedResultId={expandedResultId}
         selectedAthletes={selectedAthletes}
         showSelectAthlete={true}
+        canSelectNewAthletes={true}
         onToggleAthleteSelection={toggleAthleteSelection}
         allowShowingTimes={false}
         onShowTimesForAthlete={() => {}}

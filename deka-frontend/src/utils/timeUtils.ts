@@ -1,3 +1,5 @@
+import { AthleteResult } from "./types";
+
 export function formatTimeFromResults(totalTime?: string) {
   if (!totalTime)
     return '—'
@@ -42,3 +44,26 @@ export function secondsToMinSecsStr(value?: number): string | undefined {
   return `${minutes}:${String(seconds).padStart(2, '0')}.${dsecs}`;
 }
 
+export function calcAthleteTotalRunTime(athlete: AthleteResult): number {
+  if (!athlete)
+    return 0
+
+  const totalRunTime = athlete.runTimes?.reduce(
+    (sum, runTime) => Number(sum) + Number(runTime),
+    0) 
+    ?? 0;
+
+  return totalRunTime;
+}
+
+export function calcAthleteTotalZonesTime(athlete: AthleteResult): number {
+  if (!athlete)
+    return 0
+
+  const totalZonesTime = athlete.zoneTimes?.reduce(
+    (sum, zoneTime) => Number(sum) + Number(zoneTime),
+    0) 
+    ?? 0;
+
+  return totalZonesTime;
+}
