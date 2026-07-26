@@ -85,3 +85,50 @@ export function getIndexForTotalRunTimeInChart(time: number, numDivs: number): n
 
   return index;
 }
+
+
+// Zone Time
+export const MinZoneTime = 25.0;
+export const MaxZoneTime = 300.0;
+
+export function getZoneTimeForIndexInChart(index:number, numDivs:number): number {
+  const time = MinZoneTime + (MaxZoneTime - MinZoneTime) * (index / numDivs);
+  return time;
+}
+
+export function getZoneTimeForIndexInChartStr(index:number, numDivs:number): string {
+  const timeStr = secondsToHourMinSecsStr(getZoneTimeForIndexInChart(index, numDivs)) ?? '';
+  return timeStr;
+}
+
+export function getIndexForZoneTimeInChart(time: number, numDivs: number): number {
+  const step = (MaxZoneTime - MinZoneTime) / numDivs;
+  const indexFloat = (time - MinZoneTime) / step;
+  const index = Math.round(indexFloat);
+
+  return index;
+}
+
+
+// Run Leg Time
+export const MinRunTime = 60.0;
+export const MaxRunTime = 300.0;
+
+export function getRunTimeForIndexInChart(index:number, numDivs:number): number {
+  const time = MinRunTime + (MaxRunTime - MinRunTime) * (index / numDivs);
+  return time;
+}
+
+export function getRunTimeForIndexInChartStr(index:number, numDivs:number): string {
+  const timeStr = secondsToHourMinSecsStr(getRunTimeForIndexInChart(index, numDivs)) ?? '';
+  return timeStr;
+}
+
+export function getIndexForRunTimeInChart(time: number, numDivs: number): number {
+  const step = (MaxRunTime - MinRunTime) / numDivs;
+  const indexFloat = (time - MinRunTime) / step;
+  const index = Math.round(indexFloat);
+
+  return index;
+}
+

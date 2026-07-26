@@ -119,11 +119,9 @@ export function PercentilesChart({
             show: false,
             formatter: 'Athlete Time',
           },
-          data: [
-            {
-              xAxis: athleteTimeIndex,
-            },
-          ],
+          data: (athleteTimeIndex >= 0 && athleteTimeIndex < data.length) ? 
+          [{ xAxis: athleteTimeIndex, }] :
+          [],
         },
       },
     ],

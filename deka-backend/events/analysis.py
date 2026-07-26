@@ -4,9 +4,9 @@ from events.models import AthleteResult, DekaEvent
 
 MIN_RUN_TIME:float = 60.0
 MAX_RUN_TIME:float = 300.0
-MIN_ZONE_TIME:float = 30.0
+MIN_ZONE_TIME:float = 25.0
 MAX_ZONE_TIME:float = 300.0
-PARTIAL_TIME_STEP:float = 10.0
+PARTIAL_TIME_STEP:float = 5.0
 
 MIN_TOTAL_TIME_RUNS:float = 840.0
 MAX_TOTAL_TIME_RUNS:float = 2400.0
