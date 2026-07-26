@@ -25,13 +25,15 @@ export function AnalysisZonesPanel({ results, athlete }: AnalysisTotalsPanelProp
       <div className="analysis-metrics">
         {partialZonesInfo.map(({ label, percentile, time, number }) => (
           <article className="analysis-metric-card zones" key={label}>
-            <div className="analysis-metric-label zones">
-              <strong>{label}</strong>
-              <span>{number}</span>
-            </div>
-            <div className="analysis-metric-values zones">
-              <strong>{time}</strong>
-              <span>{percentile}</span>
+            <div className="analysis-metric-title">
+              <div className="analysis-metric-label zones">
+                <strong>{label}</strong>
+                <span>{number}</span>
+              </div>
+              <div className="analysis-metric-values zones">
+                <strong>{time}</strong>
+                <span>{percentile}</span>
+              </div>
             </div>
           </article>
         ))}

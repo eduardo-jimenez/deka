@@ -330,14 +330,21 @@ header h1 {
 
 .analysis-metric-card {
   display: flex;
+  flex-direction: column;
   align-items: start;
-  justify-content: space-between;
+  justify-content: horizontal;
   gap: 16px;
   min-height: 76px;
   padding: 16px;
   border: 1px solid #7fb2f5;
   border-radius: 8px;
   background: #f8fafc;
+}
+
+.analysis-metric-title {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .analysis-metric-label {
@@ -352,6 +359,12 @@ header h1 {
   gap: 4px;
   justify-items: end;
   text-align: right;
+}
+
+.analysis-metric-chart {
+  aspect-ratio: 4 / 1;
+  justify-items: center;
+  width: 100%;
 }
 
 /* Colors for the different types of cards we'll have */

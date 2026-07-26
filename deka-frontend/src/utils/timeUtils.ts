@@ -44,6 +44,34 @@ export function secondsToMinSecsStr(value?: number): string | undefined {
   return `${minutes}:${String(seconds).padStart(2, '0')}.${dsecs}`;
 }
 
+export function secondsToHourMinSecsDsStr(value?: number): string | undefined {
+  if (!value) return undefined
+
+  const hours = Math.floor(value / 3600);
+  const valueLeft = value - hours * 3600;
+  const minutes = Math.floor(valueLeft / 60);
+  const secondsFloat = valueLeft - minutes * 60;
+  const seconds = Math.floor(secondsFloat);
+  const dsecsFloat = secondsFloat - seconds;
+  const dsecs = Math.floor(dsecsFloat * 10);
+
+  return `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${dsecs}`;
+}
+
+export function secondsToHourMinSecsStr(value?: number): string | undefined {
+  if (!value) return undefined
+
+  const hours = Math.floor(value / 3600);
+  const valueLeft = value - hours * 3600;
+  const minutes = Math.floor(valueLeft / 60);
+  const secondsFloat = valueLeft - minutes * 60;
+  const seconds = Math.floor(secondsFloat);
+
+  return `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+
+
 export function calcAthleteTotalRunTime(athlete: AthleteResult): number {
   if (!athlete)
     return 0
