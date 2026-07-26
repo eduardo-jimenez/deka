@@ -389,33 +389,33 @@ header h1 {
   color: #721c1c;
 }
 
-/* RUNNING */
-.analysis-metric-card.run {
-  border-color: #4f9974;
-}
-
-.analysis-metric-label.run strong, 
-.analysis-metric-values.run strong {
-  color: #0a9b6b;
-}
-
-.analysis-metric-label.run span,
-.analysis-metric-values.run span {
-  color: #2a5547;
-}
-
 /* ZONES */
 .analysis-metric-card.zones {
-  border-color: #99854f;
+  border-color: #4f998f;
 }
 
 .analysis-metric-label.zones strong, 
 .analysis-metric-values.zones strong {
-  color: #9b740a;
+  color: #0a9b8f;
 }
 
 .analysis-metric-label.zones span,
 .analysis-metric-values.zones span {
+  color: #2a5551;
+}
+
+/* RUN */
+.analysis-metric-card.run {
+  border-color: #99854f;
+}
+
+.analysis-metric-label.run strong, 
+.analysis-metric-values.run strong {
+  color: #9b740a;
+}
+
+.analysis-metric-label.run span,
+.analysis-metric-values.run span {
   color: #554d2a;
 }
 
