@@ -6,6 +6,8 @@ import { getTotalTimeForIndexInChartStr, getIndexForTotalTimeInChart, TotalTimes
 import { getTotalRunTimeForIndexInChartStr, getIndexForTotalRunTimeInChart, RunLineColor, RunGradientColor, RunMarkLineColor } from '../utils/chartUtils'
 import { getTotalZonesTimeForIndexInChartStr, getIndexForTotalZonesTimeInChart, ZonesLineColor, ZonesGradientColor, ZonesMarkLineColor } from '../utils/chartUtils'
 import { PercentilesChart } from './charts/PercentilesChart'
+import { RaceProgressionChart } from './charts/RaceProgressionChart'
+import { RadarZonesAndRunsChart } from './charts/RadarZonesAndRunsChart'
 
 interface AnalysisTotalsPanelProps {
   results: AnalysisResults | null
@@ -32,7 +34,7 @@ export function AnalysisTotalsPanel({ results, athlete }: AnalysisTotalsPanelPro
           <div className="analysis-metric-title">
             <div className="analysis-metric-label total">
               <strong>DEKA Mark</strong>
-              <span>#{results.num_better_total_times}/{results.total_count}</span>
+              <span>#{results.num_better_total_times + 1}/{results.total_count}</span>
             </div>
             <div className="analysis-metric-values total">
               <strong>{athlete?.total_time ?? '—'}</strong>
@@ -56,7 +58,7 @@ export function AnalysisTotalsPanel({ results, athlete }: AnalysisTotalsPanelPro
           <div className="analysis-metric-title">
             <div className="analysis-metric-label run">
               <strong>Total Run Time</strong>
-              <span>#{results.num_better_total_run_times}/{results.total_count}</span>
+              <span>#{results.num_better_total_run_times + 1}/{results.total_count}</span>
             </div>
             <div className="analysis-metric-values run">
               <strong>{athlete ? durationLabel(calcAthleteTotalRunTime(athlete)) : '—'}</strong>
@@ -78,7 +80,7 @@ export function AnalysisTotalsPanel({ results, athlete }: AnalysisTotalsPanelPro
           <div className="analysis-metric-title">
             <div className="analysis-metric-label zones">
               <strong>Total Zones Time</strong>
-              <span>#{results.num_better_total_zone_times}/{results.total_count}</span>
+              <span>#{results.num_better_total_zone_times + 1}/{results.total_count}</span>
             </div>
             <div className="analysis-metric-values zones">
               <strong>{athlete ? durationLabel(calcAthleteTotalZonesTime(athlete)) : '—'}</strong>
@@ -93,6 +95,41 @@ export function AnalysisTotalsPanel({ results, athlete }: AnalysisTotalsPanelPro
               lineColor={ZonesLineColor}
               gradientColor={ZonesGradientColor}
               markLineColor={ZonesMarkLineColor}
+            />
+          </div>
+        </article>
+        <article className="analysis-metric-card total">
+          <div className="analysis-metric-title">
+            <div className="analysis-metric-label total">
+              <strong>Race Position Evolution</strong>
+            </div>
+            <div className="analysis-metric-values total">
+              <strong>#{results.num_better_total_times + 1}/{results.total_count}</strong>
+            </div>
+          </div>
+          <div className="analysis-metric-chart">
+            <RaceProgressionChart 
+              data={results.race_progression}
+              totalCount={results.total_count}
+              athlete={athlete}
+              lineColor={TotalTimesLineColor}
+            />
+          </div>
+        </article>
+        <article className="analysis-metric-card total">
+          <div className="analysis-metric-title">
+            <div className="analysis-metric-label total">
+              <strong>Athlete Performance per Station</strong>
+            </div>
+            <div className="analysis-metric-values total">
+              <strong>{athlete?.total_time ?? '—'}</strong>
+            </div>
+          </div>
+          <div className="analysis-metric-chart radar">
+            <RadarZonesAndRunsChart 
+              results={results}
+              athlete={athlete}
+              lineColor={TotalTimesLineColor}
             />
           </div>
         </article>

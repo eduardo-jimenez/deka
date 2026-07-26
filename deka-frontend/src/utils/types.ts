@@ -100,4 +100,5 @@ export interface AnalysisResults {
   num_better_total_zone_times: number
   num_better_run_times: number[]
   num_better_zone_times: number[]
+  race_progression: number[]
 }

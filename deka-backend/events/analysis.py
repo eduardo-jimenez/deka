@@ -126,6 +126,18 @@ class AthleteTimes:
     ]
     self.total_run_time:float = sum(self.run_times)
     self.total_zone_time:float = sum(self.zone_times)
+    self.times_after_station:list[float] = []
+    prevTime = 0.0
+    for i in range(20):
+      index:int = int(i / 2)
+      if i % 2 == 0:
+        stationTime = self.run_times[index]
+      else:
+        stationTime = self.zone_times[index]
+      newTime:float = prevTime + stationTime
+      self.times_after_station.append(newTime)
+      prevTime = newTime
+
 
 
 class AthleteAnalyzer:
@@ -148,6 +160,7 @@ class AthleteAnalyzer:
     self.num_better_total_zone_times:int = 0
     self.num_better_run_times:list[int] = [0] * 10
     self.num_better_zone_times:list[int] = [0] * 10
+    self.race_progression:list[int] = [0] * 20
 
 
   def analyze(self):
@@ -192,6 +205,11 @@ class AthleteAnalyzer:
           self.num_better_run_times[i] += 1
         if aTimes.zone_times[i] < athleteTimes.zone_times[i]:
           self.num_better_zone_times[i] += 1
+
+      # update the race progression
+      for i in range(20):
+        if aTimes.times_after_station[i] < athleteTimes.times_after_station[i]:
+          self.race_progression[i] += 1
 
 
   def round_percentile(self, percentile: float):

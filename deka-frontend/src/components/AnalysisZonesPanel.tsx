@@ -21,7 +21,7 @@ export function AnalysisZonesPanel({ results, athlete }: AnalysisTotalsPanelProp
     label: ZoneNames[index],
     percentile: percentileLabel(percentile),
     time: durationLabel(athlete.zoneTimes[index]),
-    number: `#${results.num_better_zone_times[index]}/${results.total_count}`,
+    number: `#${results.num_better_zone_times[index] + 1}/${results.total_count}`,
     athleteTimeIndex: getIndexForZoneTimeInChart(athlete.zoneTimes[index] ?? 0, results.zone_time_buckets[0].length),
   }))
 

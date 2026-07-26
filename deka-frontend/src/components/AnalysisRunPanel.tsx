@@ -19,7 +19,7 @@ export function AnalysisRunPanel({ results, athlete }: AnalysisTotalsPanelProps)
     label: `Run ${index + 1}`,
     percentile: percentileLabel(percentile),
     time: durationLabel(athlete.runTimes[index]),
-    number: `#${results.num_better_run_times[index]}/${results.total_count}`,
+    number: `#${results.num_better_run_times[index] + 1}/${results.total_count}`,
     athleteTimeIndex: getIndexForRunTimeInChart(athlete.runTimes[index] ?? 0, results.run_time_buckets[0].length),
   }))
 

@@ -178,6 +178,7 @@ def analyze_performance(request):
       "num_better_total_zone_times": analyzer.num_better_total_zone_times,
       "num_better_run_times": analyzer.num_better_run_times,
       "num_better_zone_times": analyzer.num_better_zone_times,
+      "race_progression": analyzer.race_progression,
     },
   })
 

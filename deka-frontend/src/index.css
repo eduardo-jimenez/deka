@@ -367,6 +367,10 @@ header h1 {
   width: 100%;
 }
 
+.analysis-metric-chart.radar {
+  aspect-ratio: 1;
+}
+
 /* Colors for the different types of cards we'll have */
 /* GENERIC */
 .analysis-metric-label strong,
