@@ -57,9 +57,8 @@ export function fetchAvailableEvents() {
 
 export function fetchAnalyzeAthlete(params: AnalysisParams) {
   return axios
-    .get<AnalysisResults>(`${apiBaseUrl}/api/analyze-athlete/`, { params })
-    .then(res => res.data)
-    //.then(data => console.log(data))
+    .get<{ data: AnalysisResults }>(`${apiBaseUrl}/api/analyze-athlete/`, { params })
+    .then(res => res.data.data)
 }
 
 

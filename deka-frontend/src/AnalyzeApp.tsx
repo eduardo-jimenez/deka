@@ -184,7 +184,7 @@ function AnalyzeApp() {
         </section>
       )}
 
-      <AnalysisPanel results={analysisResults} />
+      <AnalysisPanel results={analysisResults} athlete={analyzeAthlete} />
 
       <section className="advanced-search" ref={advancedSearchRef}>
         <div className="advanced-search-heading">

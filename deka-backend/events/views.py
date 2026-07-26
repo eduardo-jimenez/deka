@@ -173,6 +173,11 @@ def analyze_performance(request):
       "total_zone_time_buckets": analyzer.total_zones_time_buckets,
       "run_time_buckets": analyzer.run_time_buckets,
       "zone_time_buckets": analyzer.zone_time_buckets,
+      "num_better_total_times": analyzer.num_better_total_times,
+      "num_better_total_run_times": analyzer.num_better_total_run_times,
+      "num_better_total_zone_times": analyzer.num_better_total_zone_times,
+      "num_better_run_times": analyzer.num_better_run_times,
+      "num_better_zone_times": analyzer.num_better_zone_times,
     },
   })
 

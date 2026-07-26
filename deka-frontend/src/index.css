@@ -258,14 +258,189 @@ header h1 {
   background: #1e40af;
 }
 
+.analysis-panel {
+  margin-bottom: 24px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.analysis-panel-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.analysis-panel-header h2,
+.analysis-panel-eyebrow,
+.analysis-panel-comparison {
+  margin: 0;
+}
+
+.analysis-panel-header h2 {
+  font-size: 1.25rem;
+}
+
+.analysis-panel-eyebrow,
+.analysis-panel-comparison {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.analysis-tabs {
+  display: flex;
+  gap: 4px;
+  margin: 20px -20px 20px;
+  padding: 0 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.analysis-tabs button {
+  padding: 10px 14px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.analysis-tabs button:hover,
+.analysis-tabs button.is-active {
+  color: #1d4ed8;
+}
+
+.analysis-tabs button.is-active {
+  border-bottom-color: #1d4ed8;
+  font-weight: 600;
+}
+
+.analysis-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 12px;
+  min-width: 400px;
+}
+
+.analysis-metrics.single-card {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.analysis-metric-card {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 76px;
+  padding: 16px;
+  border: 1px solid #7fb2f5;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.analysis-metric-label {
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+  text-align: left;
+}
+
+.analysis-metric-values {
+  display: grid;
+  gap: 4px;
+  justify-items: end;
+  text-align: right;
+}
+
+/* Colors for the different types of cards we'll have */
+/* GENERIC */
+.analysis-metric-label strong,
+.analysis-metric-values strong {
+  font-size: 1.15rem;
+  color: #1d4ed8;
+}
+
+.analysis-metric-label strong,
+.analysis-metric-values strong {
+  font-size: 1.15rem;
+  color: #1d4ed8;
+}
+
+.analysis-metric-label span,
+.analysis-metric-values span {
+  color: #1c4072;
+  font-size: 0.9rem;
+}
+
+/* TOTALS */
+.analysis-metric-card.total {
+  border-color: #f57f7f;
+}
+
+.analysis-metric-label.total strong, 
+.analysis-metric-values.total strong {
+  color: #d81d1d;
+}
+
+.analysis-metric-label.total span,
+.analysis-metric-values.total span {
+  color: #721c1c;
+}
+
+/* RUNNING */
+.analysis-metric-card.run {
+  border-color: #4f9974;
+}
+
+.analysis-metric-label.run strong, 
+.analysis-metric-values.run strong {
+  color: #0a9b6b;
+}
+
+.analysis-metric-label.run span,
+.analysis-metric-values.run span {
+  color: #2a5547;
+}
+
+/* ZONES */
+.analysis-metric-card.zones {
+  border-color: #99854f;
+}
+
+.analysis-metric-label.zones strong, 
+.analysis-metric-values.zones strong {
+  color: #9b740a;
+}
+
+.analysis-metric-label.zones span,
+.analysis-metric-values.zones span {
+  color: #554d2a;
+}
+
+
+
 @media (max-width: 760px) {
   .athlete-summary,
-  .analysis-controls {
+  .analysis-controls,
+  .analysis-metrics {
     grid-template-columns: 1fr;
   }
 
   .analysis-controls button {
     width: 100%;
+  }
+
+  .analysis-panel-header {
+    align-items: start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .analysis-tabs {
+    overflow-x: auto;
   }
 }
 

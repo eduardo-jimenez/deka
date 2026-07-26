@@ -90,4 +90,14 @@ export interface AnalysisResults {
   total_zone_time_perc: number
   run_time_percs: number[]
   zone_time_percs: number[]
+  total_time_buckets: number[]
+  total_run_time_buckets: number[]
+  total_zone_time_buckets: number[]
+  run_time_buckets: number[][]
+  zone_time_buckets: number[][]
+  num_better_total_times: number
+  num_better_total_run_times: number
+  num_better_total_zone_times: number
+  num_better_run_times: number[]
+  num_better_zone_times: number[]
 }
