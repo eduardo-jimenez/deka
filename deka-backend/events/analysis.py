@@ -9,7 +9,7 @@ MAX_ZONE_TIME:float = 300.0
 PARTIAL_TIME_STEP:float = 10.0
 
 MIN_TOTAL_TIME_RUNS:float = 840.0
-MAX_TOTAL_TIME_RUNS:float = 1800.0
+MAX_TOTAL_TIME_RUNS:float = 2400.0
 MIN_TOTAL_TIME_ZONES:float = 600.0
 MAX_TOTAL_TIME_ZONES:float = 1800.0
 TOTAL_RUN_ZONE_TIME_STEP:float = 30.0
@@ -37,14 +37,14 @@ def get_zone_div_min_max_time(index: int) -> tuple[float, float]:
   return (minTime, maxTime)
 
 def get_total_run_time_div_min_max_time(index: int) -> tuple[float, float]:
-  minTime = MIN_TOTAL_TIME_RUNS + index * TOTAL_TIME_STEP
-  maxTime = minTime + TOTAL_TIME_STEP
+  minTime = MIN_TOTAL_TIME_RUNS + index * TOTAL_RUN_ZONE_TIME_STEP
+  maxTime = minTime + TOTAL_RUN_ZONE_TIME_STEP
 
   return (minTime, maxTime)
 
 def get_total_zones_time_div_min_max_time(index: int) -> tuple[float, float]:
-  minTime = MIN_TOTAL_TIME_ZONES + index * TOTAL_TIME_STEP
-  maxTime = minTime + TOTAL_TIME_STEP
+  minTime = MIN_TOTAL_TIME_ZONES + index * TOTAL_RUN_ZONE_TIME_STEP
+  maxTime = minTime + TOTAL_RUN_ZONE_TIME_STEP
 
   return (minTime, maxTime)
 
@@ -75,7 +75,7 @@ def get_total_run_time_div_index(time: float) -> int:
   if time < MIN_TOTAL_TIME_RUNS or time >= MAX_TOTAL_TIME_RUNS:
     return -1
   
-  index = int((time - MIN_TOTAL_TIME_RUNS) / TOTAL_TIME_STEP)
+  index = int((time - MIN_TOTAL_TIME_RUNS) / TOTAL_RUN_ZONE_TIME_STEP)
 
   return index
 
@@ -83,7 +83,7 @@ def get_total_zones_time_div_index(time: float) -> int:
   if time < MIN_TOTAL_TIME_ZONES or time >= MAX_TOTAL_TIME_ZONES:
     return -1
   
-  index = int((time - MIN_TOTAL_TIME_ZONES) / TOTAL_TIME_STEP)
+  index = int((time - MIN_TOTAL_TIME_ZONES) / TOTAL_RUN_ZONE_TIME_STEP)
 
   return index
 

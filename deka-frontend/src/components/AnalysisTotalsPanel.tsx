@@ -3,8 +3,8 @@ import { calcAthleteTotalRunTime, calcAthleteTotalZonesTime, timeToSeconds } fro
 import { percentileLabel, durationLabel } from '../utils/analysisUtils'
 import type { AnalysisResults, AthleteResult } from '../utils/types'
 import { getTotalTimeForIndexInChartStr, getIndexForTotalTimeInChart, TotalTimesLineColor, TotalTimesGradientColor, TotalTimesMarkLineColor } from '../utils/chartUtils'
-import { RunLineColor, RunGradientColor, RunMarkLineColor } from '../utils/chartUtils'
-import { ZonesLineColor, ZonesGradientColor, ZonesMarkLineColor } from '../utils/chartUtils'
+import { getTotalRunTimeForIndexInChartStr, getIndexForTotalRunTimeInChart, RunLineColor, RunGradientColor, RunMarkLineColor } from '../utils/chartUtils'
+import { getTotalZonesTimeForIndexInChartStr, getIndexForTotalZonesTimeInChart, ZonesLineColor, ZonesGradientColor, ZonesMarkLineColor } from '../utils/chartUtils'
 import { PercentilesChart } from './charts/PercentilesChart'
 
 interface AnalysisTotalsPanelProps {
@@ -15,11 +15,15 @@ interface AnalysisTotalsPanelProps {
 
 export function AnalysisTotalsPanel({ results, athlete }: AnalysisTotalsPanelProps) {
 
-  if (!results) 
+  if (!results || !athlete) 
     return null
 
   const athleteTotalTime: number = timeToSeconds(athlete?.total_time) ?? 0;
   const athleteTotalTimeIndex = getIndexForTotalTimeInChart(athleteTotalTime, results.total_time_buckets.length);
+  const athleteTotalRunTime: number = calcAthleteTotalRunTime(athlete);
+  const athleteTotalRunTimeIndex = getIndexForTotalRunTimeInChart(athleteTotalRunTime, results.total_run_time_buckets.length);
+  const athleteTotalZonesTime: number = calcAthleteTotalZonesTime(athlete);
+  const athleteTotalZonesTimeIndex = getIndexForTotalZonesTimeInChart(athleteTotalZonesTime, results.total_zone_time_buckets.length);
 
   return (
     <Fragment>
@@ -59,6 +63,16 @@ export function AnalysisTotalsPanel({ results, athlete }: AnalysisTotalsPanelPro
               <span>{percentileLabel(results.total_run_time_perc)}</span>
             </div>
           </div>
+          <div className="analysis-metric-chart">
+            <PercentilesChart 
+              data={results.total_run_time_buckets}
+              athleteTimeIndex={athleteTotalRunTimeIndex}
+              xAxisValuesFunc={getTotalRunTimeForIndexInChartStr} 
+              lineColor={RunLineColor}
+              gradientColor={RunGradientColor}
+              markLineColor={RunMarkLineColor}
+            />
+          </div>
         </article>
         <article className="analysis-metric-card zones">
           <div className="analysis-metric-title">
@@ -70,6 +84,16 @@ export function AnalysisTotalsPanel({ results, athlete }: AnalysisTotalsPanelPro
               <strong>{athlete ? durationLabel(calcAthleteTotalZonesTime(athlete)) : '—'}</strong>
               <span>{percentileLabel(results.total_zone_time_perc)}</span>
             </div>
+          </div>
+          <div className="analysis-metric-chart">
+            <PercentilesChart 
+              data={results.total_zone_time_buckets}
+              athleteTimeIndex={athleteTotalZonesTimeIndex}
+              xAxisValuesFunc={getTotalZonesTimeForIndexInChartStr} 
+              lineColor={ZonesLineColor}
+              gradientColor={ZonesGradientColor}
+              markLineColor={ZonesMarkLineColor}
+            />
           </div>
         </article>
       </div>

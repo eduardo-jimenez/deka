@@ -50,7 +50,7 @@ export function getTotalZonesTimeForIndexInChart(index:number, numDivs:number): 
 }
 
 export function getTotalZonesTimeForIndexInChartStr(index:number, numDivs:number): string {
-  const timeStr = secondsToHourMinSecsStr(getTotalTimeForIndexInChart(index, numDivs)) ?? '';
+  const timeStr = secondsToHourMinSecsStr(getTotalZonesTimeForIndexInChart(index, numDivs)) ?? '';
   return timeStr;
 }
 
@@ -65,7 +65,7 @@ export function getIndexForTotalZonesTimeInChart(time: number, numDivs: number):
 
 // Run Total Time 
 export const MinRunTotalTime = 840.0;
-export const MaxRunTotalTime = 1800.0;
+export const MaxRunTotalTime = 2400.0;
 
 
 export function getTotalRunTimeForIndexInChart(index:number, numDivs:number): number {
@@ -74,7 +74,7 @@ export function getTotalRunTimeForIndexInChart(index:number, numDivs:number): nu
 }
 
 export function getTotalRunTimeForIndexInChartStr(index:number, numDivs:number): string {
-  const timeStr = secondsToHourMinSecsStr(getTotalTimeForIndexInChart(index, numDivs)) ?? '';
+  const timeStr = secondsToHourMinSecsStr(getTotalRunTimeForIndexInChart(index, numDivs)) ?? '';
   return timeStr;
 }
 

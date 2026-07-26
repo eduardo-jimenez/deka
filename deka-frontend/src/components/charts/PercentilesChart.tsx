@@ -37,7 +37,7 @@ export function PercentilesChart({
       .reduce((sum, value) => sum + value, 0),
   );
   const totalSum = sumBuckets[sumBuckets.length - 1];
-  const percentilesPerIndex: number[] = sumBuckets.map((value) => value / totalSum);
+  const percentilesPerIndex: number[] = sumBuckets.map((_, index) => (index > 0) ? sumBuckets[index - 1] / totalSum : 0);
 
   // fill the chart options
   const option: EChartsOption = {
