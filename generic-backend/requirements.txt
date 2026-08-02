@@ -1,0 +1,4 @@
+django
+openpyxl
+gunicorn
+django-cors-headers
