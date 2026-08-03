@@ -8,6 +8,34 @@ from events.models import AthleteResult, EventInfo, RaceInfo
 from events.analysis import AthleteAnalyzer
 
 
+def races_available(request):
+  logger = logging.getLogger(__name__)
+  logger.info("Returning available events")
+
+  races = RaceInfo.objects.order_by("name").values(
+    "name", "url"
+  )
+
+  return JsonResponse({
+    "count": races.count(),
+    "results": list(races),
+  })
+
+
+def events_available(request):
+  logger = logging.getLogger(__name__)
+  logger.info("Returning available events")
+
+  events = EventInfo.objects.order_by("start_date", "name").values(
+    "id", "name", "city", "start_date", "end_date", "race__name"
+  )
+
+  return JsonResponse({
+    "count": events.count(),
+    "results": list(events),
+  })
+
+
 def athlete_results(request):
   athlete_name = request.GET.get("athlete_name", "").strip()
   event_name = request.GET.get("event_name", "").strip()
@@ -93,20 +121,6 @@ def athlete_results(request):
     "page_size": page_size,
     "pages": paginator.num_pages,
     "results": results,
-  })
-
-
-def events_available(request):
-  logger = logging.getLogger(__name__)
-  logger.info("Returning available events")
-
-  events = EventInfo.objects.order_by("start_date", "name").values(
-    "id", "name", "city", "start_date", "end_date", "race__name"
-  )
-
-  return JsonResponse({
-    "count": events.count(),
-    "results": list(events),
   })
 
 
