@@ -5,6 +5,7 @@ interface FiltersPanelProps {
   onChange: (key: keyof Filters, value: string) => void
   races: HybridRace[]
   onSearch: () => void
+  onRaceChanged?: (raceName: string) => void
 }
 
 export function SearchPanel({
@@ -12,6 +13,7 @@ export function SearchPanel({
   onChange,
   races,
   onSearch,
+  onRaceChanged,
 }: FiltersPanelProps) {
   return (
     <section className="filters">
@@ -23,7 +25,12 @@ export function SearchPanel({
       >
         <div className="filter-row">
           <label>Race</label>
-          <select value={inputs.race_name} onChange={e => onChange('race_name', e.target.value)}>
+          <select value={inputs.race_name} onChange={e => {
+            onChange('race_name', e.target.value)
+            if (onRaceChanged) {
+              onRaceChanged(e.target.value)
+            }
+          }}>
             <option value="" disabled>Select a race</option>
             {races.map(race => (
               <option key={race.id} value={race.name}>

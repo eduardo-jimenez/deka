@@ -10,8 +10,6 @@ import { SearchResults } from './components/SearchResults'
 import { Header } from './Header'
 import { useAvailableRaces } from './utils/useAvailableRaces'
 
-const selectedAthletesStorageKey = 'generic-selected-athletes'
-
 
 function SearchApp() {
   // `inputs` are the staged values the user edits.
@@ -40,9 +38,15 @@ function SearchApp() {
     setInputs(prev => ({ ...prev, [key]: value }))
   }
 
-  const applySearch = () => {
-    saveFilters(inputs)
-    setFilters(inputs)
+  const onRaceChanged = (raceName: string) => {
+    const nextInputs = { ...inputs, race_name: raceName }
+    setInputs(nextInputs)
+    applySearch(nextInputs)
+  }
+
+  const applySearch = (nextInputs: Filters = inputs) => {
+    saveFilters(nextInputs)
+    setFilters(nextInputs)
     setPage(1)
   }
 
@@ -55,6 +59,7 @@ function SearchApp() {
         onChange={onChangeInputs}
         races={racesQuery.data?.results ?? []}
         onSearch={applySearch}
+        onRaceChanged={onRaceChanged}
       />
 
       <PaginationControls

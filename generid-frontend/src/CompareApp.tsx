@@ -8,6 +8,7 @@ import { SearchPanel } from './components/SearchPanel'
 import { PaginationControls } from './components/PaginationControls'
 import { SearchResults } from './components/SearchResults'
 import { Header } from './Header'
+import { useAvailableRaces } from './utils/useAvailableRaces'
 
 const selectedAthletesStorageKey = 'deka-selected-athletes'
 const MaxNumSelectedAthletes = 4;
@@ -35,6 +36,7 @@ function CompareApp() {
     }
   })
   const advancedSearchRef = useRef<HTMLElement>(null)
+  const racesQuery = useAvailableRaces();
 
   const resultQuery = useQuery<PaginatedResponse, Error>({
     queryKey: ['results', filters, page, pageSize],
@@ -58,9 +60,17 @@ function CompareApp() {
     setInputs(prev => ({ ...prev, [key]: value }))
   }
 
-  const applySearch = () => {
-    saveFilters(inputs)
-    setFilters(inputs)
+  const onRaceChanged = (raceName: string) => {
+    clearAllAthleteSelections();
+
+    const nextInputs = { ...inputs, race_name: raceName }
+    setInputs(nextInputs)
+    applySearch(nextInputs)
+  }
+
+  const applySearch = (nextInputs: Filters = inputs) => {
+    saveFilters(nextInputs)
+    setFilters(nextInputs)
     setPage(1)
   }
 
@@ -80,6 +90,10 @@ function CompareApp() {
     setSelectedAthletes(current => 
       current.filter(item => item.id != athlete.id)
     )
+  }
+
+  const clearAllAthleteSelections = () => {
+    setSelectedAthletes([]);
   }
 
   const scrollToAdvancedSearch = () => {
@@ -281,12 +295,6 @@ function CompareApp() {
                   ))}
                 </tr>
                 <tr>
-                  <td>Comeptición</td>
-                  {selectedAthleteList.map(athlete => (
-                    <td colSpan={2} key={athlete.id}>{athlete.deka_type} - {athlete.gender}</td>
-                  ))}
-                </tr>
-                <tr>
                   <td>Categoría</td>
                   {selectedAthleteList.map(athlete => {
                     return (athlete.age_group && athlete.age_group.length > 0) ? (
@@ -373,7 +381,9 @@ function CompareApp() {
             <SearchPanel
               inputs={inputs}
               onChange={onChangeInputs}
+              races={racesQuery.data?.results ?? []}
               onSearch={applySearch}
+              onRaceChanged={onRaceChanged}
             />
 
             <PaginationControls

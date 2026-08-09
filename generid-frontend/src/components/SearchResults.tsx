@@ -44,7 +44,6 @@ export function SearchResults({
             <tr>
               <th>Atleta</th>
               <th>Evento</th>
-              <th>DEKA Type</th>
               <th>Categoría</th>
               <th>Género</th>
               <th>Grupo de Edad</th>
@@ -84,7 +83,6 @@ export function SearchResults({
                       {item.athlete_name}
                     </td>
                     <td>{item.event_name}</td>
-                    <td>{item.deka_type}</td>
                     <td>{item.category}</td>
                     <td>{item.gender}</td>
                     <td>{item.age_group}</td>
