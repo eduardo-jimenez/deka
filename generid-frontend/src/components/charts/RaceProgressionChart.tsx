@@ -9,6 +9,7 @@ interface RaceProgressionChartProps {
   totalCount: number
   athlete: AthleteResult | null
   lineColor: string
+  zoneNames: string[]
 }
 
 export function RaceProgressionChart({
@@ -16,6 +17,7 @@ export function RaceProgressionChart({
   totalCount,
   athlete,
   lineColor,
+  zoneNames,
 }: RaceProgressionChartProps) {
 
   if (!data || data.length != 20 || !athlete) 
@@ -69,7 +71,7 @@ export function RaceProgressionChart({
         if (index % 2 == 0) {
           return `Run ${i + 1}`;
         } else {
-          return `Ejercicio ${i + 1}`;
+          return zoneNames[index] || `Ejercicio ${i + 1}`;
         }
       }),
       axisLabel: {

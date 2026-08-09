@@ -81,8 +81,10 @@ export function RadarZonesAndRunsChart({
 
   // generate the radar axii names / values
   const radarIndicators: RadarIndicatorOption[] = results.race_progression.map((_, index) => {
-    const i:number = Math.floor(index / 2)
-    const name:string = (index % 2 == 0) ? `Run ${i + 1}` : `Ejercicio ${i + 1}`;
+    const i:number = Math.floor(index / 2);
+    const name:string = (index % 2 == 0) ? 
+      `Run ${i + 1}` : 
+      results.zone_names[i] || `Ejercicio ${i + 1}`;
     
     return {
       name: name,

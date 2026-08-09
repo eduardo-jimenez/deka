@@ -141,7 +141,13 @@ def analyze_performance(request):
   logger = logging.getLogger(__name__)
   logger.info(f"Analyzing athlete with id {athlete_id}. Race = {race_name}. Event = {event_name}. Gender = {gender}")
 
-  # First acquire the athlete info
+  # Find the race
+  try:
+    race = RaceInfo.objects.get(name__iexact=race_name)
+  except RaceInfo.DoesNotExist:
+    return JsonResponse({"error": "Race not found"}, status=404)
+
+  # Acquire the athlete info
   athlete_queryset = AthleteResult.objects.select_related("event")
   try:
     athlete = athlete_queryset.get(pk=athlete_id)
@@ -201,6 +207,9 @@ def analyze_performance(request):
       "num_better_run_times": analyzer.num_better_run_times,
       "num_better_zone_times": analyzer.num_better_zone_times,
       "race_progression": analyzer.race_progression,
+      "zone_names": [
+        race.zone_1, race.zone_2, race.zone_3, race.zone_4, race.zone_5, race.zone_6, race.zone_7, race.zone_8, race.zone_9, race.zone_10
+      ],
     },
   })
 

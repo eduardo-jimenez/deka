@@ -4,6 +4,16 @@ from django.db import models
 class RaceInfo(models.Model):
   name = models.CharField(max_length=255, unique=True)
   url = models.CharField(max_length=255, blank=True)
+  zone_1 = models.CharField(max_length=64, blank=True)
+  zone_2 = models.CharField(max_length=64, blank=True)
+  zone_3 = models.CharField(max_length=64, blank=True)
+  zone_4 = models.CharField(max_length=64, blank=True)
+  zone_5 = models.CharField(max_length=64, blank=True)
+  zone_6 = models.CharField(max_length=64, blank=True)
+  zone_7 = models.CharField(max_length=64, blank=True)
+  zone_8 = models.CharField(max_length=64, blank=True)
+  zone_9 = models.CharField(max_length=64, blank=True)
+  zone_10 = models.CharField(max_length=64, blank=True)
 
   class Meta:
     verbose_name = "RaceInfo"

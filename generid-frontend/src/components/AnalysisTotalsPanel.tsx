@@ -113,6 +113,7 @@ export function AnalysisTotalsPanel({ results, athlete }: AnalysisTotalsPanelPro
               totalCount={results.total_count}
               athlete={athlete}
               lineColor={TotalTimesLineColor}
+              zoneNames={results.zone_names}
             />
           </div>
         </article>
