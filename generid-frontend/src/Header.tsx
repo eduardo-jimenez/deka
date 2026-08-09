@@ -16,7 +16,7 @@ export function Header({ currentPage }: HeaderProps) {
 
   return (
     <header className="site-header">
-      <a className="site-brand" href="/index.html">DEKA Analyzer</a>
+      <a className="site-brand" href="/index.html">Hybrid Analyzer</a>
       <button
         className="menu-button"
         type="button"

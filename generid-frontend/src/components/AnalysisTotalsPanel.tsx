@@ -33,7 +33,7 @@ export function AnalysisTotalsPanel({ results, athlete }: AnalysisTotalsPanelPro
         <article className="analysis-metric-card total">
           <div className="analysis-metric-title">
             <div className="analysis-metric-label total">
-              <strong>DEKA Mark</strong>
+              <strong>Final Time</strong>
               <span>#{results.num_better_total_times + 1}/{results.total_count}</span>
             </div>
             <div className="analysis-metric-values total">

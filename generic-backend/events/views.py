@@ -1,7 +1,7 @@
 import logging
 import json
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import F, Q
 from django.http import JsonResponse
 
 from events.models import AthleteResult, EventInfo, RaceInfo
@@ -23,10 +23,12 @@ def races_available(request):
 
 
 def events_available(request):
-  logger = logging.getLogger(__name__)
-  logger.info("Returning available events")
+  race_name = request.GET.get("race_name", "").strip()
 
-  events = EventInfo.objects.order_by("start_date", "name").values(
+  logger = logging.getLogger(__name__)
+  logger.info(f"Returning available events for race {race_name}")
+
+  events = EventInfo.objects.filter(race__name=race_name).order_by("start_date", "name").values(
     "id", "name", "city", "start_date", "end_date", "race__name"
   )
 
@@ -37,6 +39,10 @@ def events_available(request):
 
 
 def athlete_results(request):
+  race_name = request.GET.get("race_name", "").strip()
+  if race_name is None or race_name == "":
+    raise ValueError("race_name parameter is required")
+
   athlete_name = request.GET.get("athlete_name", "").strip()
   event_name = request.GET.get("event_name", "").strip()
   category = request.GET.get("category", "").strip()
@@ -57,6 +63,8 @@ def athlete_results(request):
   queryset = AthleteResult.objects.select_related("event")
 
   filters = Q()
+  if race_name:
+    filters &= Q(event__race__name__iexact=race_name)
   if athlete_name:
     filters &= Q(athlete_name__icontains=athlete_name)
   if event_name:
@@ -64,11 +72,11 @@ def athlete_results(request):
   if category:
     filters &= Q(category__icontains=category)
   if gender:
-    filters &= Q(gender__iexact=gender)
+    filters &= Q(gender__icontains=gender)
   if age_group:
     filters &= Q(age_group__icontains=age_group)
 
-  queryset = queryset.filter(filters)
+  queryset = queryset.filter(filters).order_by(F("total_time").asc(nulls_last=True))
 
   paginator = Paginator(queryset, page_size)
   page_number = request.GET.get("page", "1")

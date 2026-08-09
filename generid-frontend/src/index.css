@@ -549,6 +549,7 @@ header h1 {
 .filter-row {
   display: grid;
   gap: 8px;
+  margin-top: 12px;
 }
 
 .filter-row select {
@@ -568,7 +569,7 @@ header h1 {
 }
 
 .filter-line.line-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .filter-line.line-3 {

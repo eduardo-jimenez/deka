@@ -48,7 +48,7 @@ export function SearchResults({
               <th>Categoría</th>
               <th>Género</th>
               <th>Grupo de Edad</th>
-              <th>DEKA Mark</th>
+              <th>Final Time</th>
               {
                 allowShowingTimes && (
                   <th>Tiempos</th>

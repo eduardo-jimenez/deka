@@ -17,11 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from events.views import athlete_results, events_available, analyze_performance
+from events.views import athlete_results, events_available, analyze_performance, races_available
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/athlete-results/', athlete_results, name='athlete-results'),
+    path('api/races/', races_available, name='races-available'),
     path('api/events/', events_available, name='events-available'),
+    path('api/athlete-results/', athlete_results, name='athlete-results'),
     path('api/analyze-athlete/', analyze_performance, name='analyze_performance'),
 ]

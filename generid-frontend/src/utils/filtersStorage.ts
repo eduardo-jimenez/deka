@@ -1,12 +1,12 @@
 import type { Filters } from './types'
 import { getStoredValue, setStoredValue } from './storage'
 
-export const filtersStorageKey = 'deka-search-filters'
+export const filtersStorageKey = 'generic-search-filters'
 
 export const emptyFilters: Filters = {
   athlete_name: '',
   event_name: '',
-  deka_type: '',
+  race_name: '',
   category: '',
   gender: '',
   age_group: '',

@@ -8,8 +8,9 @@ import { SearchPanel } from './components/SearchPanel'
 import { PaginationControls } from './components/PaginationControls'
 import { SearchResults } from './components/SearchResults'
 import { Header } from './Header'
+import { useAvailableRaces } from './utils/useAvailableRaces'
 
-const selectedAthletesStorageKey = 'deka-selected-athletes'
+const selectedAthletesStorageKey = 'generic-selected-athletes'
 
 
 function SearchApp() {
@@ -20,6 +21,7 @@ function SearchApp() {
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(50)
   const [expandedResultId, setExpandedResultId] = useState<number | null>(null)
+  const racesQuery = useAvailableRaces();
 
   const resultQuery = useQuery<PaginatedResponse, Error>({
     queryKey: ['results', filters, page, pageSize],
@@ -51,6 +53,7 @@ function SearchApp() {
       <SearchPanel
         inputs={inputs}
         onChange={onChangeInputs}
+        races={racesQuery.data?.results ?? []}
         onSearch={applySearch}
       />
 

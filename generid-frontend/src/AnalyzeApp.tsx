@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { fetchAvailableEvents, fetchSearchResults, fetchAnalyzeAthlete } from './utils/dbUtils'
 import { secondsToMinSecsStr } from './utils/timeUtils'
-import type { Filters, AthleteResult, EventAvailableResponse, PaginatedResponse, AnalysisParams, AnalysisResults } from './utils/types'
+import type { Filters, AthleteResult, EventsAvailableResponse, PaginatedResponse, AnalysisParams, AnalysisResults } from './utils/types'
 import { getSavedFilters, saveFilters } from './utils/filtersStorage'
 import { SearchPanel } from './components/SearchPanel'
 import { PaginationControls } from './components/PaginationControls'
@@ -10,7 +10,7 @@ import { SearchResults } from './components/SearchResults'
 import { Header } from './Header'
 import { AnalysisPanel } from './components/AnalysisPanel'
 
-const analyzedAthleteStorageKey = 'deka-analyzed-athlete'
+const analyzedAthleteStorageKey = 'generic-analyzed-athlete'
 
 export const emptyAnalyzeParams: AnalysisParams = {
   athlete_id: -1,
@@ -58,7 +58,7 @@ function AnalyzeApp() {
   const results = resultQuery.data?.results ?? []
   const totalPages = resultQuery.data?.pages ?? 0
 
-  const eventsQuery = useQuery<EventAvailableResponse, Error>({
+  const eventsQuery = useQuery<EventsAvailableResponse, Error>({
     queryKey: ['available-events'],
     queryFn: fetchAvailableEvents,
   })

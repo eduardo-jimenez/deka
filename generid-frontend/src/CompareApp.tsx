@@ -112,8 +112,8 @@ function CompareApp() {
   }
 
   const getFinalTimeDifferenceFormatted = (athlete:AthleteResult, compAthlete:AthleteResult) => {
-    const thisTime = athlete?.dekaMarkTime;
-    const prevTime = compAthlete?.dekaMarkTime;
+    const thisTime = athlete?.finalTime;
+    const prevTime = compAthlete?.finalTime;
     return getTimeDifferenceFormatted(thisTime, prevTime);
   }
 
@@ -316,7 +316,7 @@ function CompareApp() {
                   {getSelectedAthletesTotalZonesTime()}
                 </tr>
                 <tr>
-                  <td>DEKA Mark</td>
+                  <td>Final Time</td>
                   {getSelectedAthletesFinalTime()}
                 </tr>
               </tbody>

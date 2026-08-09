@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { AnalysisParams, EventAvailableResponse, PaginatedResponse, AnalysisResults } from './types'
+import type { AnalysisParams, EventsAvailableResponse, PaginatedResponse, AnalysisResults, RacesAvailableResponse } from './types'
 import { formatTimeFromResults, timeToSeconds } from './timeUtils'
 
 const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '')
@@ -36,7 +36,7 @@ export function fetchSearchResults(params: Record<string, string | number>) {
         zone_10: formatTimeFromResults(result.zone_10),
 
         // convert the numbers to seconds
-        dekaMarkTime: timeToSeconds(result.total_time),
+        finalTime: timeToSeconds(result.total_time),
         runTimes: [
           timeToSeconds(result.run_1), timeToSeconds(result.run_2), timeToSeconds(result.run_3), timeToSeconds(result.run_4), timeToSeconds(result.run_5),
           timeToSeconds(result.run_6), timeToSeconds(result.run_7), timeToSeconds(result.run_8), timeToSeconds(result.run_9), timeToSeconds(result.run_10),
@@ -49,9 +49,16 @@ export function fetchSearchResults(params: Record<string, string | number>) {
   }))
 }
 
+export function fetchAvailableRaces() {
+  //console.log('Fetching available races from API...')
+  return axios
+    .get<RacesAvailableResponse>(`${apiBaseUrl}/api/races/`)
+    .then(res => res.data)
+}
+
 export function fetchAvailableEvents() {
   return axios
-    .get<EventAvailableResponse>(`${apiBaseUrl}/api/events/`)
+    .get<EventsAvailableResponse>(`${apiBaseUrl}/api/events/`)
     .then(res => res.data)
 }
 

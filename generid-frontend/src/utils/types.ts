@@ -13,9 +13,9 @@ export const ZoneNames = [
 
 
 export interface Filters {
+  race_name: string
   athlete_name: string
   event_name: string
-  deka_type: string
   category: string
   gender: string
   age_group: string
@@ -25,7 +25,6 @@ export interface AthleteResult {
   id: number
   athlete_name: string
   event_name: string
-  deka_type: string
   category: string
   gender: string
   age_group: string
@@ -51,7 +50,7 @@ export interface AthleteResult {
   zone_9?: string
   zone_10?: string
 
-  dekaMarkTime?: number
+  finalTime?: number
   runTimes: Array<number | undefined>
   zoneTimes: Array<number | undefined>
 }
@@ -62,18 +61,28 @@ export interface PaginatedResponse {
   results: AthleteResult[]
 }
 
-export interface DekaEvent {
+export interface HybridRace {
   id: number
   name: string
   url: string
+}
+
+export interface HybridEvent {
+  id: number
+  name: string
   city: string
   start_date: string
   end_date: string
 }
 
-export interface EventAvailableResponse {
+export interface RacesAvailableResponse {
   count: number
-  results: DekaEvent[]
+  results: HybridRace[]
+}
+
+export interface EventsAvailableResponse {
+  count: number
+  results: HybridEvent[]
 }
 
 export interface AnalysisParams {
