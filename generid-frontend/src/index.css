@@ -1,0 +1,722 @@
+:root {
+  font-family: Inter, system-ui, sans-serif;
+  color: #111;
+  background: #f6f7fb;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #f6f7fb;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.app-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+header {
+  margin-bottom: 24px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.site-brand {
+  color: #111;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.site-header nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.site-header nav a {
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #475569;
+  text-decoration: none;
+}
+
+.site-header nav a:hover,
+.site-header nav a.is-active {
+  background: #e0e7ff;
+  color: #1d4ed8;
+}
+
+.menu-button {
+  display: none;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    padding: 16px;
+  }
+
+  .site-header {
+    flex-wrap: wrap;
+  }
+
+  .menu-button {
+    display: block;
+  }
+
+  .site-header nav {
+    display: none;
+    flex-basis: 100%;
+    flex-direction: column;
+  }
+
+  .site-header nav.is-open {
+    display: flex;
+  }
+
+  .site-header nav a {
+    padding: 10px 12px;
+  }
+}
+
+.info-page {
+  padding: 32px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.info-page h1 {
+  margin-top: 0;
+}
+
+.info-page p {
+  color: #475569;
+}
+
+.available-events {
+  margin-top: 24px;
+}
+
+.available-events h2 {
+  margin-bottom: 12px;
+  font-size: 1.25rem;
+}
+
+.available-events ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.available-events a {
+  color: #1d4ed8;
+}
+
+.primary-link {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #1d4ed8;
+  color: #fff;
+  text-decoration: none;
+}
+
+.selected-athletes {
+  margin-bottom: 24px;
+}
+
+.selected-athletes h2 {
+  margin: 0 0 12px;
+  font-size: 1.25rem;
+}
+
+.selected-athletes > p {
+  margin: 0;
+  color: #475569;
+}
+
+.athelete-to-analyze-info {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 24px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.athlete-summary {
+  display: grid;
+  grid-template-columns:
+    minmax(220px, 2fr)
+    minmax(180px, 1.25fr)
+    minmax(140px, 1fr)
+    minmax(80px, 0.55fr)
+    minmax(70px, 0.45fr)
+    auto;
+  gap: 16px;
+}
+
+.athlete-summary > div,
+.analysis-controls label {
+  display: grid;
+  gap: 6px;
+}
+
+.athlete-summary-close-button {
+  align-self: center;
+  justify-self: end;
+  padding: 6px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.athlete-summary-close-button:hover {
+  background: #e2e8f0;
+}
+
+.athlete-summary-close-button img {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+.athlete-summary-athlete strong {
+  font-size: 1rem;
+}
+
+.athlete-summary-gender,
+.athlete-summary-time {
+  font-size: 0.9rem;
+}
+
+.athlete-summary-label,
+.analysis-controls label {
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.analysis-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 16px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.analysis-controls select,
+.analysis-controls button {
+  min-height: 42px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.analysis-controls select {
+  border: 1px solid #d1d5db;
+  background: #fff;
+}
+
+.analysis-controls button {
+  border: 1px solid #1d4ed8;
+  background: #1d4ed8;
+  color: #fff;
+  cursor: pointer;
+}
+
+.analysis-controls button:hover {
+  background: #1e40af;
+}
+
+.analysis-panel {
+  margin-bottom: 24px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.analysis-panel-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.analysis-panel-header h2,
+.analysis-panel-eyebrow,
+.analysis-panel-comparison {
+  margin: 0;
+}
+
+.analysis-panel-header h2 {
+  font-size: 1.25rem;
+}
+
+.analysis-panel-eyebrow,
+.analysis-panel-comparison {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.analysis-tabs {
+  display: flex;
+  gap: 4px;
+  margin: 20px -20px 20px;
+  padding: 0 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.analysis-tabs button {
+  padding: 10px 14px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.analysis-tabs button:hover,
+.analysis-tabs button.is-active {
+  color: #1d4ed8;
+}
+
+.analysis-tabs button.is-active {
+  border-bottom-color: #1d4ed8;
+  font-weight: 600;
+}
+
+.analysis-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 12px;
+  min-width: 400px;
+}
+
+.analysis-metrics.single-card {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.analysis-metric-card {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: horizontal;
+  gap: 16px;
+  min-height: 76px;
+  padding: 16px;
+  border: 1px solid #7fb2f5;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.analysis-metric-title {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.analysis-metric-label {
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+  text-align: left;
+}
+
+.analysis-metric-values {
+  display: grid;
+  gap: 4px;
+  justify-items: end;
+  text-align: right;
+}
+
+.analysis-metric-chart {
+  aspect-ratio: 4 / 1;
+  justify-items: center;
+  width: 100%;
+}
+
+.analysis-metric-chart.radar {
+  aspect-ratio: 1;
+}
+
+/* Colors for the different types of cards we'll have */
+/* GENERIC */
+.analysis-metric-label strong,
+.analysis-metric-values strong {
+  font-size: 1.15rem;
+  color: #1d4ed8;
+}
+
+.analysis-metric-label strong,
+.analysis-metric-values strong {
+  font-size: 1.15rem;
+  color: #1d4ed8;
+}
+
+.analysis-metric-label span,
+.analysis-metric-values span {
+  color: #1c4072;
+  font-size: 0.9rem;
+}
+
+/* TOTALS */
+.analysis-metric-card.total {
+  border-color: #f57f7f;
+}
+
+.analysis-metric-label.total strong, 
+.analysis-metric-values.total strong {
+  color: #d81d1d;
+}
+
+.analysis-metric-label.total span,
+.analysis-metric-values.total span {
+  color: #721c1c;
+}
+
+/* ZONES */
+.analysis-metric-card.zones {
+  border-color: #4f998f;
+}
+
+.analysis-metric-label.zones strong, 
+.analysis-metric-values.zones strong {
+  color: #0a9b8f;
+}
+
+.analysis-metric-label.zones span,
+.analysis-metric-values.zones span {
+  color: #2a5551;
+}
+
+/* RUN */
+.analysis-metric-card.run {
+  border-color: #99854f;
+}
+
+.analysis-metric-label.run strong, 
+.analysis-metric-values.run strong {
+  color: #9b740a;
+}
+
+.analysis-metric-label.run span,
+.analysis-metric-values.run span {
+  color: #554d2a;
+}
+
+
+
+@media (max-width: 760px) {
+  .athlete-summary,
+  .analysis-controls,
+  .analysis-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .analysis-controls button {
+    width: 100%;
+  }
+
+  .analysis-panel-header {
+    align-items: start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .analysis-tabs {
+    overflow-x: auto;
+  }
+}
+
+.advanced-search-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.advanced-search-heading h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.advanced-search-toggle {
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #1d4ed8;
+  cursor: pointer;
+}
+
+.advanced-search-toggle:hover {
+  background: #eff6ff;
+}
+
+.comparer-table {
+  display: grid;
+  gap: 16px;
+  overflow-x: auto;
+}
+
+.comparer-table .times-table {
+  width: max-content;
+  max-width: none;
+  table-layout: fixed;
+}
+
+.comparer-table .times-table th {
+  box-sizing: border-box;
+  width: 200px;
+  min-width: 200px;
+}
+.comparer-table .times-table td {
+  box-sizing: border-box;
+  width: 100px;
+}
+
+.comparer-table .times-table th {
+  position: relative;
+  padding-right: 40px;
+}
+
+.selected-athlete {
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.selected-athlete-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.selected-athlete-heading h3,
+.selected-athlete-heading p {
+  margin: 0;
+}
+
+.selected-athlete-heading p {
+  margin-top: 4px;
+  color: #475569;
+}
+
+.filters,
+.pagination-controls {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.filter-row {
+  display: grid;
+  gap: 8px;
+}
+
+.filter-row select {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.filter-line {
+  display: grid;
+  gap: 12px;
+}
+
+.filter-line.line-1 {
+  grid-template-columns: 1fr;
+}
+
+.filter-line.line-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.filter-line.line-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.filter-actions {
+  margin-top: 8px;
+}
+
+.filter-row label {
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.filter-row input {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.pagination-controls {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+}
+
+.pagination-controls button {
+  padding: 8px 14px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.pagination-controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.results table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.results th,
+.results td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.results th {
+  background: #f8fafc;
+  font-weight: 600;
+}
+
+.results tr:last-child td {
+  border-bottom: none;
+}
+
+.times-button {
+  padding: 7px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #fff;
+  color: #1d4ed8;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.times-button:hover {
+  background: #eff6ff;
+}
+
+.selection-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 4px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.selection-button:hover {
+  background: #cacdcf;
+}
+
+.selection-button img {
+  display: block;
+}
+
+.times-details td {
+  padding: 16px;
+  background: #f8fafc;
+}
+
+.times-table {
+  max-width: 1000px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.times-table th,
+.times-table td {
+  padding: 10px 12px;
+  width: 100px;
+}
+
+.times-table th {
+  background: #f1f5f9;
+}
+
+.time-difference-positive {
+  color: #FF2020
+}
+
+.time-difference-negative {
+  color: #108010
+}
+
+.close-button {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  padding: 4px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background: #cacdcf;
+}
+
+.close-button img {
+  display: block;
+}

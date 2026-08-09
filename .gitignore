@@ -2,3 +2,6 @@
 deka-frontend/node_modules/
 deka-frontend/dist/
 deka-frontend/.env.production
+generid-frontend/node_modules/
+generic-frontend/dist/
+generic-frontend/.env.production
