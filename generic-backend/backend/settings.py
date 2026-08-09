@@ -37,7 +37,7 @@ DEBUG = os.getenv("DEBUG", "False").lower() in {"1", "true", "yes", "on"}
 
 ALLOWED_HOSTS = get_env_list(
     "ALLOWED_HOSTS",
-    "localhost,127.0.0.1,165.232.106.17",
+    "localhost,127.0.0.1,165.232.106.17,analyzer.dragonhybridrace.com",
 )
 CSRF_TRUSTED_ORIGINS = get_env_list(
     "CSRF_TRUSTED_ORIGINS",
