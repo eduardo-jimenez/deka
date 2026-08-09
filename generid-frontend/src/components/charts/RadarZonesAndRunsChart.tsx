@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 import type { EChartsOption, RadarComponentOption, TooltipComponentFormatterCallbackParams } from "echarts";
 import { secondsToMinSecsStr, secondsToHourMinSecsStr } from "../../utils/timeUtils";
 import { getTotalTimeForIndexInChartStr } from "../../utils/chartUtils";
-import { AnalysisResults, AthleteResult, ZoneNames } from "../../utils/types";
+import { AnalysisResults, AthleteResult } from "../../utils/types";
 import { RadarIndicatorOption } from "echarts/types/src/coord/radar/RadarModel.js";
 
 
@@ -82,7 +82,7 @@ export function RadarZonesAndRunsChart({
   // generate the radar axii names / values
   const radarIndicators: RadarIndicatorOption[] = results.race_progression.map((_, index) => {
     const i:number = Math.floor(index / 2)
-    const name:string = (index % 2 == 0) ? `Run ${i + 1}` : ZoneNames[i];
+    const name:string = (index % 2 == 0) ? `Run ${i + 1}` : `Ejercicio ${i + 1}`;
     
     return {
       name: name,

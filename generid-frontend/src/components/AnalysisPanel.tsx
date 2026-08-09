@@ -1,5 +1,4 @@
 import { Fragment, useState } from 'react'
-import { ZoneNames } from '../utils/types'
 import { calcAthleteTotalRunTime, calcAthleteTotalZonesTime, secondsToMinSecsStr } from '../utils/timeUtils'
 import { percentileLabel, durationLabel } from '../utils/analysisUtils'
 import type { AnalysisResults, AthleteResult } from '../utils/types'

@@ -13,6 +13,19 @@
       "django": true,
       "justMyCode": false,
       "console": "integratedTerminal"
+    },
+    {
+      "name": "Django: Runserver",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/manage.py",
+      "args": [
+        "runserver",
+        "8000"
+      ],
+      "django": true,
+      "justMyCode": false,
+      "console": "integratedTerminal"
     }
   ],
   "inputs": [
@@ -20,12 +33,6 @@
       "id": "importFile",
       "type": "promptString",
       "description": "Path to the .xlsx file to import"
-    },
-    {
-      "id": "eventName",
-      "type": "promptString",
-      "description": "Event name to use (optional)",
-      "default": ""
     }
   ]
 }

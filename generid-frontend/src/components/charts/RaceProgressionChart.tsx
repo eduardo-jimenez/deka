@@ -1,8 +1,7 @@
 import ReactECharts from "echarts-for-react";
 import type { EChartsOption, TooltipComponentFormatterCallbackParams } from "echarts";
-import { secondsToMinSecsStr, secondsToHourMinSecsStr } from "../../utils/timeUtils";
-import { getTotalTimeForIndexInChartStr } from "../../utils/chartUtils";
-import { AthleteResult, ZoneNames } from "../../utils/types";
+import { secondsToHourMinSecsStr } from "../../utils/timeUtils";
+import { AthleteResult } from "../../utils/types";
 
 
 interface RaceProgressionChartProps {
@@ -68,9 +67,9 @@ export function RaceProgressionChart({
       data: data.map((_, index) => {
         const i = Math.floor(index / 2);
         if (index % 2 == 0) {
-          return `Run ${i}`;
+          return `Run ${i + 1}`;
         } else {
-          return ZoneNames[i];
+          return `Ejercicio ${i + 1}`;
         }
       }),
       axisLabel: {

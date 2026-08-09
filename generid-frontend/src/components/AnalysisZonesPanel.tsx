@@ -1,7 +1,6 @@
 import { Fragment, useState } from 'react'
 import { percentileLabel, durationLabel } from '../utils/analysisUtils'
 import type { AnalysisResults, AthleteResult } from '../utils/types'
-import { ZoneNames } from '../utils/types'
 import { getIndexForZoneTimeInChart, getZoneTimeForIndexInChartStr, ZonesLineColor, ZonesGradientColor, ZonesMarkLineColor } from '../utils/chartUtils'
 import { PercentilesChart } from './charts/PercentilesChart'
 
@@ -18,7 +17,7 @@ export function AnalysisZonesPanel({ results, athlete }: AnalysisTotalsPanelProp
     return null
 
   const partialZonesInfo = results.zone_time_percs.map((percentile, index) => ({
-    label: ZoneNames[index],
+    label: `Ejercicio ${index + 1}`,
     percentile: percentileLabel(percentile),
     time: durationLabel(athlete.zoneTimes[index]),
     number: `#${results.num_better_zone_times[index] + 1}/${results.total_count}`,

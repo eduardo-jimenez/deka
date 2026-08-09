@@ -1,7 +1,5 @@
 import ReactECharts from "echarts-for-react";
 import type { EChartsOption, TooltipComponentFormatterCallbackParams } from "echarts";
-import { secondsToMinSecsStr, secondsToHourMinSecsStr } from "../../utils/timeUtils";
-import { getTotalTimeForIndexInChartStr } from "../../utils/chartUtils";
 
 
 interface PercentilesChartProps {

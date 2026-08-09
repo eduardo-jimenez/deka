@@ -56,9 +56,9 @@ export function fetchAvailableRaces() {
     .then(res => res.data)
 }
 
-export function fetchAvailableEvents() {
+export function fetchAvailableEvents(raceName: string) {
   return axios
-    .get<EventsAvailableResponse>(`${apiBaseUrl}/api/events/`)
+    .get<EventsAvailableResponse>(`${apiBaseUrl}/api/events/`, { params: { race_name: raceName } })
     .then(res => res.data)
 }
 

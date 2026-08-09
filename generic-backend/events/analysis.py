@@ -8,13 +8,13 @@ MIN_ZONE_TIME:float = 25.0
 MAX_ZONE_TIME:float = 300.0
 PARTIAL_TIME_STEP:float = 5.0
 
-MIN_TOTAL_TIME_RUNS:float = 840.0
-MAX_TOTAL_TIME_RUNS:float = 2400.0
+MIN_TOTAL_TIME_RUNS:float = 600.0
+MAX_TOTAL_TIME_RUNS:float = 1800.0
 MIN_TOTAL_TIME_ZONES:float = 600.0
 MAX_TOTAL_TIME_ZONES:float = 1800.0
 TOTAL_RUN_ZONE_TIME_STEP:float = 30.0
 MIN_TOTAL_TIME:float = 1500
-MAX_TOTAL_TIME:float = 4200
+MAX_TOTAL_TIME:float = 3600
 TOTAL_TIME_STEP:float = 60.0
 
 NUM_RUN_DIVS:int = int((MAX_RUN_TIME - MIN_RUN_TIME) / PARTIAL_TIME_STEP)
@@ -172,44 +172,45 @@ class AthleteAnalyzer:
       # get the times for this athlete
       aTimes: AthleteTimes = AthleteTimes(a)
 
-      # update the buckets
-      index = get_total_time_div_index(aTimes.total_time)
-      if index >= 0:
-        self.total_time_buckets[index] += 1
-      index = get_total_run_time_div_index(aTimes.total_run_time)
-      if index >= 0:
-        self.total_run_time_buckets[index] += 1
-      index = get_total_zones_time_div_index(aTimes.total_zone_time)
-      if index >= 0:
-        self.total_zones_time_buckets[index] += 1
-      for i in range(10):
-        index = get_run_div_index(aTimes.run_times[i])
+      if aTimes.total_time > 0:
+        # update the buckets
+        index = get_total_time_div_index(aTimes.total_time)
         if index >= 0:
-          self.run_time_buckets[i][index] += 1
-        index = get_zone_div_index(aTimes.zone_times[i])
+          self.total_time_buckets[index] += 1
+        index = get_total_run_time_div_index(aTimes.total_run_time)
         if index >= 0:
-          self.zone_time_buckets[i][index] += 1
+          self.total_run_time_buckets[index] += 1
+        index = get_total_zones_time_div_index(aTimes.total_zone_time)
+        if index >= 0:
+          self.total_zones_time_buckets[index] += 1
+        for i in range(10):
+          index = get_run_div_index(aTimes.run_times[i])
+          if index >= 0:
+            self.run_time_buckets[i][index] += 1
+          index = get_zone_div_index(aTimes.zone_times[i])
+          if index >= 0:
+            self.zone_time_buckets[i][index] += 1
 
-      # if the a is not athlete, update the num_better... where appropriate
-      if self.athlete.pk == a.pk:
-        continue
+        # if the a is not athlete, update the num_better... where appropriate
+        if self.athlete.pk == a.pk:
+          continue
 
-      if aTimes.total_time < athleteTimes.total_time:
-        self.num_better_total_times += 1
-      if aTimes.total_run_time < athleteTimes.total_run_time:
-        self.num_better_total_run_times += 1
-      if aTimes.total_zone_time < athleteTimes.total_zone_time:
-        self.num_better_total_zone_times += 1
-      for i in range(10):
-        if aTimes.run_times[i] < athleteTimes.run_times[i]:
-          self.num_better_run_times[i] += 1
-        if aTimes.zone_times[i] < athleteTimes.zone_times[i]:
-          self.num_better_zone_times[i] += 1
+        if aTimes.total_time < athleteTimes.total_time:
+          self.num_better_total_times += 1
+        if aTimes.total_run_time < athleteTimes.total_run_time:
+          self.num_better_total_run_times += 1
+        if aTimes.total_zone_time < athleteTimes.total_zone_time:
+          self.num_better_total_zone_times += 1
+        for i in range(10):
+          if aTimes.run_times[i] < athleteTimes.run_times[i]:
+            self.num_better_run_times[i] += 1
+          if aTimes.zone_times[i] < athleteTimes.zone_times[i]:
+            self.num_better_zone_times[i] += 1
 
-      # update the race progression
-      for i in range(20):
-        if aTimes.times_after_station[i] < athleteTimes.times_after_station[i]:
-          self.race_progression[i] += 1
+        # update the race progression
+        for i in range(20):
+          if aTimes.times_after_station[i] < athleteTimes.times_after_station[i]:
+            self.race_progression[i] += 1
 
 
   def round_percentile(self, percentile: float):

@@ -9,11 +9,13 @@ import { PaginationControls } from './components/PaginationControls'
 import { SearchResults } from './components/SearchResults'
 import { Header } from './Header'
 import { AnalysisPanel } from './components/AnalysisPanel'
+import { useAvailableRaces } from './utils/useAvailableRaces'
 
 const analyzedAthleteStorageKey = 'generic-analyzed-athlete'
 
 export const emptyAnalyzeParams: AnalysisParams = {
   athlete_id: -1,
+  race_name: '',
   event_name: '',
   gender: '',
 }
@@ -24,6 +26,7 @@ function AnalyzeApp() {
   // `filters` are the applied values used for querying.
   const [inputs, setInputs] = useState<Filters>(getSavedFilters())
   const [filters, setFilters] = useState<Filters>(getSavedFilters())
+  const [raceName, setRaceName] = useState<string>(() => inputs.race_name)
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(50)
   const [expandedResultId, setExpandedResultId] = useState<number | null>(null)
@@ -45,6 +48,7 @@ function AnalyzeApp() {
   const advancedSearchRef = useRef<HTMLElement>(null)
   const analyzeAthleteRef = useRef<HTMLElement>(null)
 
+  const racesQuery = useAvailableRaces();
   const resultQuery = useQuery<PaginatedResponse, Error>({
     queryKey: ['results', filters, page, pageSize],
     queryFn: () =>
@@ -58,9 +62,13 @@ function AnalyzeApp() {
   const results = resultQuery.data?.results ?? []
   const totalPages = resultQuery.data?.pages ?? 0
 
+  const fetchAvailableEventsForCurrRace = () => {
+    return fetchAvailableEvents(raceName);
+  }
+
   const eventsQuery = useQuery<EventsAvailableResponse, Error>({
     queryKey: ['available-events'],
-    queryFn: fetchAvailableEvents,
+    queryFn: fetchAvailableEventsForCurrRace,
   })
 
   useEffect(() => {
@@ -71,9 +79,19 @@ function AnalyzeApp() {
     setInputs(prev => ({ ...prev, [key]: value }))
   }
 
-  const applySearch = () => {
-    saveFilters(inputs)
-    setFilters(inputs)
+  const onRaceChanged = (raceName: string) => {
+    setRaceName(raceName)
+
+    clearAllAthleteSelections()
+
+    const nextInputs = { ...inputs, race_name: raceName }
+    setInputs(nextInputs)
+    applySearch(nextInputs)
+  }
+
+  const applySearch = (nextInputs: Filters = inputs) => {
+    saveFilters(nextInputs)
+    setFilters(nextInputs)
     setPage(1)
   }
 
@@ -82,6 +100,15 @@ function AnalyzeApp() {
       behavior: 'smooth',
       block: 'start',
     })
+  }
+
+  const clearAllAthleteSelections = () => {
+    setAnalyzeAthlete(null)
+    setSelectedAthletes([])
+    setAnalysisEvent('')
+    setAnalysisGender('')
+    setAnalysisResults(null)
+    setAnalysisFilters(emptyAnalyzeParams)
   }
 
   const toggleAthleteSelection = (athlete: AthleteResult) => {
@@ -100,6 +127,7 @@ function AnalyzeApp() {
 
     const params: AnalysisParams = {
       athlete_id: analyzeAthlete.id,
+      race_name: raceName,
       event_name: analysisEvent,
       gender: analysisGender,
     }
@@ -125,13 +153,13 @@ function AnalyzeApp() {
               <span className="athlete-summary-label">Athlete</span>
               <strong>{analyzeAthlete.athlete_name}</strong>
             </div>
+            <div className="athlete-summary-race">
+              <span className="athlete-summary-label">Race</span>
+              <strong>{raceName}</strong>
+            </div>
             <div className="athlete-summary-event">
               <span className="athlete-summary-label">Event</span>
               <strong>{analyzeAthlete.event_name}</strong>
-            </div>
-            <div className="athlete-summary-deka-type">
-              <span className="athlete-summary-label">DEKA type</span>
-              <strong>{analyzeAthlete.deka_type}</strong>
             </div>
             <div className="athlete-summary-gender">
               <span className="athlete-summary-label">Gender</span>
@@ -147,12 +175,7 @@ function AnalyzeApp() {
                 type="button"
                 aria-label="Clear selected athlete"
                 onClick={() => {
-                  setAnalyzeAthlete(null)
-                  setSelectedAthletes([])
-                  setAnalysisEvent('')
-                  setAnalysisGender('')
-                  setAnalysisResults(null)
-                  setAnalysisFilters(emptyAnalyzeParams)
+                  clearAllAthleteSelections()
                 }}
               >
                 <img src="/icons/close.png" alt="Clear" height="24px" />
@@ -173,10 +196,10 @@ function AnalyzeApp() {
             <label>
               Gender
               <select value={analysisGender} onChange={event => setAnalysisGender(event.target.value)}>
-                <option value="">Any gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Mixed">Mixed</option>
+                <option value="">Cualquiera</option>
+                <option value="Masc">Masculino</option>
+                <option value="Fem">Femenino</option>
+                <option value="Mixt">Mixto</option>
               </select>
             </label>
             <button type="button" onClick={analyzeAthleteRace}>Analyze Athlete Race</button>
@@ -205,7 +228,9 @@ function AnalyzeApp() {
             <SearchPanel
               inputs={inputs}
               onChange={onChangeInputs}
+              races={racesQuery.data?.results ?? []}
               onSearch={applySearch}
+              onRaceChanged={onRaceChanged}
             />
 
             <PaginationControls

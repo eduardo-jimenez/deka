@@ -134,11 +134,12 @@ def athlete_results(request):
 
 def analyze_performance(request):
   athlete_id = request.GET.get("athlete_id", "").strip()
+  race_name = request.GET.get("race_name", "").strip()
   event_name = request.GET.get("event_name", "").strip()
   gender = request.GET.get("gender", "").strip()
 
   logger = logging.getLogger(__name__)
-  logger.info(f"Analyzing athlete with id {athlete_id}. Event = {event_name}. Gender = {gender}")
+  logger.info(f"Analyzing athlete with id {athlete_id}. Race = {race_name}. Event = {event_name}. Gender = {gender}")
 
   # First acquire the athlete info
   athlete_queryset = AthleteResult.objects.select_related("event")
@@ -154,10 +155,12 @@ def analyze_performance(request):
   race = athlete.event.race
   filters = Q()
   filters &= Q(event__race=race)
+  if race_name:
+    filters &= Q(event__race__name__iexact=race_name)
   if event_name:
     filters &= Q(event__name__icontains=event_name)
   if gender:
-    filters &= Q(gender__iexact=gender)
+    filters &= Q(gender__icontains=gender)
   athletes = queryset.filter(filters)
 
   # gather the total of athletes to compare with

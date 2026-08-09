@@ -1,5 +1,5 @@
 import { Fragment } from "react/jsx-runtime"
-import { AthleteResult, ZoneNames } from "../utils/types"
+import { AthleteResult } from "../utils/types"
 
 interface SearchResultsProps {
   isLoading: boolean
@@ -118,7 +118,7 @@ export function SearchResults({
                               const position = index + 1
                               const run = item[`run_${position}` as keyof AthleteResult] as string | undefined
                               const zone = item[`zone_${position}` as keyof AthleteResult] as string | undefined
-                              const zoneName = ZoneNames[index]
+                              const zoneName = `Ejercicio ${position}`
 
                               return (
                                 <tr key={position}>

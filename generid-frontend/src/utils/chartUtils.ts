@@ -1,4 +1,4 @@
-import { secondsToHourMinSecsStr, secondsToMinSecsStr } from "./timeUtils";
+import { secondsToHourMinSecsStr } from "./timeUtils";
 
 
 // Colors
@@ -17,7 +17,7 @@ export const RunMarkLineColor = "rgba(64, 54, 8, 0.5)";
 
 // Total Time 
 export const MinTotalTime = 1500.0;
-export const MaxTotalTime = 4200.0;
+export const MaxTotalTime = 3600.0;
 
 
 export function getTotalTimeForIndexInChart(index:number, numDivs:number): number {
@@ -64,8 +64,8 @@ export function getIndexForTotalZonesTimeInChart(time: number, numDivs: number):
 
 
 // Run Total Time 
-export const MinRunTotalTime = 840.0;
-export const MaxRunTotalTime = 2400.0;
+export const MinRunTotalTime = 600.0;
+export const MaxRunTotalTime = 1800.0;
 
 
 export function getTotalRunTimeForIndexInChart(index:number, numDivs:number): number {
