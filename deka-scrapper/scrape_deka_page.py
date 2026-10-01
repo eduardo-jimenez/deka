@@ -289,6 +289,13 @@ def scrape_athlete_result(athlete: AthleteResult, url_start:str, key:str, contes
         run_time_index = next((i for i, l in enumerate(legs) if ("Name" in l and re.search(rf"[Rr]un.*{index}$", l["Name"]))), -1)
         if run_time_index >= 0 and "Time" in legs[run_time_index]:
           run_time = parse_duration(legs[run_time_index]["Time"])
+      else:
+        run_t_num = 120 + index
+        run_time_index = next((i for i, s in enumerate(raw_data_fields) if re.search(rf"Format\(\[T{run_t_num}\]", s)), -1)
+        if run_time_index >= 0 and run_time_index < len(raw_data):
+          run_time_str = raw_data[run_time_index]
+          run_time = parse_duration(run_time_str)
+
       if not run_time:
         run_time_label_start = f"Format([Run{index}.DECIMAL]"
         run_time_index = next((i for i, s in enumerate(raw_data_fields) if s.startswith(run_time_label_start)), -1)
@@ -303,6 +310,12 @@ def scrape_athlete_result(athlete: AthleteResult, url_start:str, key:str, contes
         zone_time_index = next((i for i, l in enumerate(legs) if ("Name" in l and re.search(rf"[Zz]one.*{index} ", l["Name"]))), -1)
         if zone_time_index >= 0 and "Time" in legs[zone_time_index]:
           zone_time = parse_duration(legs[zone_time_index]["Time"])
+      else:
+        zone_t_num = 100 + index
+        zone_time_index = next((i for i, s in enumerate(raw_data_fields) if re.search(rf"Format\(\[T{zone_t_num}\]", s)), -1)
+        if zone_time_index >= 0 and zone_time_index < len(raw_data):
+          zone_time_str = raw_data[zone_time_index]
+          zone_time = parse_duration(zone_time_str)
       if not zone_time:
         zone_time_label_start = f"Format([Z{index}Result.DECIMAL]"
         zone_time_index = next((i for i, s in enumerate(raw_data_fields) if s.startswith(zone_time_label_start)), -1)
